@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Professional Invoice Generator</title>
+  <title data-translate-key="pageTitle">Professional Invoice Generator</title>
 
   <!-- Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
@@ -12,16 +12,13 @@
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Styles -->
   <style>
     :root {
       --bg-primary: #ffffff;
-      --bg-secondary: #fafafa;
+      --bg-secondary: #f7f7f7;
       --bg-panel: #ffffff;
       --text-primary: #111827;
       --text-secondary: #6b7280;
@@ -46,310 +43,87 @@
       --accent-light: rgba(249, 250, 251, 0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 14px;
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
     body {
       font-family: "Inter", sans-serif;
       background: var(--bg-secondary);
       color: var(--text-primary);
-      transition: background 0.2s, color 0.2s;
-      line-height: 1.5;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1.4;
     }
 
     /* Action bar */
     .action-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 1.5rem;
-      height: 56px;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 52px; padding: 0 1rem;
       background: var(--bg-panel);
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 2px 8px var(--shadow-color);
+      box-shadow: 0 2px 6px var(--shadow-color);
     }
-
-    .action-group {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    .action-group { display: flex; align-items: center; gap: 0.6rem; }
+    button, select {
+      font-family: inherit; font-size: 0.88rem; border: none; cursor: pointer;
     }
-
-    .btn,
-    .btn-secondary,
-    .btn-main {
-      border: none;
-      border-radius: 6px;
-      padding: 0.55rem 0.9rem;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .btn-main {
-      background: var(--accent-color);
-      color: var(--bg-primary);
-    }
-    .btn-main:hover {
-      background: var(--accent-hover);
-    }
-
-    .btn-secondary {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-    .btn-secondary:hover {
-      border-color: var(--text-primary);
-    }
-
-    .btn-icon {
-      background: none;
-      padding: 0.4rem;
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-    }
-    .btn-icon:hover {
-      color: var(--text-primary);
-    }
+    .btn { border-radius: 6px; padding: 0.45rem 0.8rem; font-weight: 600; transition: background 0.12s; }
+    .btn-main { background: var(--accent-color); color: var(--bg-primary); }
+    .btn-main:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--bg-secondary); border: 1px solid var(--border-color); }
+    .btn-secondary:hover { border-color: var(--text-primary); }
+    .btn-icon { background: none; padding: 0.3rem; font-size: 1.1rem; color: var(--text-secondary); }
+    .btn-icon:hover { color: var(--text-primary); }
 
     /* Layout */
-    .app-container {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      height: calc(100vh - 56px);
-    }
-    .panel {
-      overflow-y: auto;
-    }
-    .panel-form {
-      background: var(--bg-panel);
-      border-right: 1px solid var(--border-color);
-      padding: 1.75rem;
-    }
-    .panel-preview {
-      padding: 1.75rem;
-    }
+    .app-container { display: grid; grid-template-columns: 1fr 1.2fr; height: calc(100vh - 52px); }
+    .panel { overflow-y: auto; }
+    .panel-form { background: var(--bg-panel); border-right: 1px solid var(--border-color); padding: 1rem; }
+    .panel-preview { padding: 1rem; }
 
     /* Form */
-    .form-block {
-      margin-bottom: 1.75rem;
-    }
-
-    details.form-block {
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 0.9rem 1rem;
-      background: var(--bg-primary);
-    }
-
-    details.form-block summary {
-      list-style: none;
-      font-weight: 600;
-      cursor: pointer;
-      outline: none;
-    }
-
-    details.form-block[open] summary::after {
-      content: "▲";
-      float: right;
-      font-size: 0.65rem;
-    }
-    details.form-block summary::after {
-      content: "▼";
-      float: right;
-      font-size: 0.65rem;
-    }
-
-    .grid-2-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-top: 1.2rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    label {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 0.6rem 0.7rem;
-      font-family: inherit;
-      font-size: 0.9rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      transition: border 0.15s, box-shadow 0.15s;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px var(--accent-light);
-      outline: none;
-    }
-
-    input.invalid {
-      border-color: var(--danger-color);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 72px;
-    }
+    details.form-block { border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-primary); margin-bottom: 0.9rem; }
+    details.form-block summary { padding: 0.55rem 0.8rem; font-weight: 600; cursor: pointer; list-style: none; }
+    details.form-block summary::after { content: "▶"; float: right; font-size: 0.65rem; transition: transform 0.2s; }
+    details.form-block[open] summary::after { transform: rotate(90deg); }
+    .form-inner { padding: 0.6rem 0.8rem 0.9rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.7rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.22rem; }
+    label { font-size: 0.75rem; color: var(--text-secondary); }
+    input, textarea, select { padding: 0.5rem 0.6rem; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.85rem; }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px var(--accent-light); outline: none; }
+    input.invalid { border-color: var(--danger-color); }
+    textarea { resize: vertical; min-height: 64px; }
 
     /* Items */
-    #items-header,
-    .item-row {
-      display: grid;
-      grid-template-columns: 4fr 1fr 1.2fr auto;
-      gap: 0.5rem;
-      align-items: center;
-    }
+    #items-header, .item-row { display: grid; grid-template-columns: 4fr 1fr 1.2fr auto; gap: 0.4rem; align-items: center; }
+    #items-header { margin-bottom: 0.35rem; }
+    #items-header label { font-size: 0.68rem; text-transform: uppercase; color: var(--text-secondary); }
+    .item-row input { padding: 0.4rem 0.45rem; font-size: 0.8rem; }
+    .btn-add-item { width: 100%; padding: 0.55rem; border: 1px dashed var(--border-color); margin-top: 0.6rem; background: none; color: var(--text-secondary); border-radius: 6px; }
+    .btn-add-item:hover { background: var(--bg-secondary); color: var(--accent-color); border-color: var(--accent-color); }
+    .btn-remove-item { background: none; border: none; font-size: 1rem; color: var(--text-secondary); cursor: pointer; }
+    .btn-remove-item:hover { color: var(--danger-color); }
 
-    #items-header {
-      margin-top: 1.2rem;
-      margin-bottom: 0.4rem;
-    }
-    #items-header label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-    }
-
-    .item-row input {
-      padding: 0.4rem 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .btn-add-item {
-      width: 100%;
-      margin-top: 0.9rem;
-      padding: 0.65rem;
-      border: 1px dashed var(--border-color);
-      border-radius: 6px;
-      background: none;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-    }
-    .btn-add-item:hover {
-      background: var(--bg-secondary);
-      color: var(--accent-color);
-      border-color: var(--accent-color);
-    }
-
-    .btn-remove-item {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-    }
-    .btn-remove-item:hover {
-      color: var(--danger-color);
-    }
-
-    /* Preview panel */
-    .preview-wrapper {
-      max-width: 820px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 2.2rem;
-      border-radius: 6px;
-      box-shadow: 0 4px 16px var(--shadow-color);
-    }
+    /* Preview */
+    .preview-wrapper { max-width: 820px; margin: 0 auto; background: #ffffff; padding: 2rem; border-radius: 6px; box-shadow: 0 4px 16px var(--shadow-color); }
 
     /* Footer */
-    .app-footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
+    .app-footer { text-align: center; font-size: 0.8rem; color: var(--text-secondary); margin-top: 1.2rem; }
+    .app-footer a { color: inherit; text-decoration: none; }
+    .app-footer a:hover { text-decoration: underline; }
 
-    .app-footer a {
-      color: inherit;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .app-footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .app-container {
-        grid-template-columns: 1fr;
-      }
-      .panel-preview {
-        display: none;
-      }
-      .panel-preview.visible {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: var(--bg-secondary);
-        overflow-y: auto;
-        padding: 1rem;
-        z-index: 200;
-      }
+    /* Mobile */
+    @media (max-width: 900px) {
+      .app-container { grid-template-columns: 1fr; }
+      .panel-preview { display: none; }
+      .panel-preview.visible { display: block; position: fixed; inset: 0; background: var(--bg-secondary); overflow-y: auto; z-index: 200; padding: 1rem; }
     }
 
     /* Loading */
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .loading {
-      position: relative;
-      color: transparent !important;
-    }
-
-    .loading::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      width: 16px;
-      height: 16px;
-      margin: auto;
-      border: 3px solid rgba(128, 128, 128, 0.3);
-      border-top-color: var(--text-primary);
-      border-radius: 50%;
-      animation: spin 1s infinite linear;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .loading { position: relative; color: transparent !important; }
+    .loading::after { content: ""; position: absolute; inset: 0; width: 16px; height: 16px; margin: auto; border: 3px solid rgba(128, 128, 128, 0.3); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -360,83 +134,88 @@
       <button class="btn btn-secondary" id="printBtn" data-translate-key="printPDF">Print</button>
     </div>
     <div class="action-group">
-      <button class="btn btn-secondary btn-show-preview" id="showPreviewBtn" style="display: none">👁️</button>
+      <button class="btn btn-secondary btn-show-preview" id="showPreviewBtn" style="display:none">👁️</button>
       <select id="languageSelector"></select>
       <button class="btn btn-icon" id="resetBtn" title="Reset">🔄</button>
       <button class="btn btn-icon" id="themeToggle" title="Toggle theme">🌙</button>
     </div>
   </header>
 
-  <!-- Main -->
   <main class="app-container">
     <!-- Form panel -->
-    <section class="panel panel-form">
+    <aside class="panel panel-form">
       <form id="invoiceForm" novalidate>
         <!-- Company -->
         <details class="form-block" open>
           <summary data-translate-key="companySectionTitle">Your Company</summary>
-          <div class="grid-2-col" style="margin-top: 1rem">
-            <div class="form-group">
-              <label for="companyName" data-translate-key="companyNameLabel">Company Name *</label>
-              <input id="companyName" required />
+          <div class="form-inner">
+            <div class="grid-2">
+              <div class="form-group">
+                <label data-translate-key="companyNameLabel" for="companyName">Company Name *</label>
+                <input id="companyName" required placeholder="Acme Ltd" />
+              </div>
+              <div class="form-group">
+                <label data-translate-key="logoLabel" for="logoUpload">Logo</label>
+                <input type="file" id="logoUpload" accept="image/*" />
+              </div>
             </div>
             <div class="form-group">
-              <label for="logoUpload" data-translate-key="logoLabel">Logo</label>
-              <input type="file" id="logoUpload" accept="image/*" />
+              <label data-translate-key="addressLabel" for="companyAddress">Address</label>
+              <textarea id="companyAddress" rows="2" placeholder="123 Main St\nCity"></textarea>
             </div>
-          </div>
-          <div class="form-group" style="margin-top: 1rem">
-            <label for="companyAddress" data-translate-key="addressLabel">Address</label>
-            <textarea id="companyAddress" rows="2"></textarea>
-          </div>
-          <div class="grid-2-col">
-            <div class="form-group">
-              <label for="companyEmail" data-translate-key="emailLabel">Email</label>
-              <input type="email" id="companyEmail" />
-            </div>
-            <div class="form-group">
-              <label for="companyPhone" data-translate-key="phoneLabel">Phone</label>
-              <input id="companyPhone" />
+            <div class="grid-2">
+              <div class="form-group">
+                <label data-translate-key="emailLabel" for="companyEmail">Email</label>
+                <input type="email" id="companyEmail" placeholder="info@acme.com" />
+              </div>
+              <div class="form-group">
+                <label data-translate-key="phoneLabel" for="companyPhone">Phone</label>
+                <input id="companyPhone" placeholder="+1 555‑1234" />
+              </div>
             </div>
           </div>
         </details>
 
         <!-- Client -->
-        <details class="form-block" open>
+        <details class="form-block">
           <summary data-translate-key="clientSectionTitle">Client</summary>
-          <div class="form-group" style="margin-top: 1rem">
-            <label for="clientName" data-translate-key="clientNameLabel">Client Name *</label>
-            <input id="clientName" required />
-          </div>
-          <div class="form-group">
-            <label for="clientAddress" data-translate-key="addressLabel">Address</label>
-            <textarea id="clientAddress" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="clientEmail" data-translate-key="emailLabel">Email</label>
-            <input type="email" id="clientEmail" />
+          <div class="form-inner">
+            <div class="form-group">
+              <label data-translate-key="clientNameLabel" for="clientName">Client Name *</label>
+              <input id="clientName" required placeholder="Client Co" />
+            </div>
+            <div class="form-group">
+              <label data-translate-key="addressLabel" for="clientAddress">Address</label>
+              <textarea id="clientAddress" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label data-translate-key="emailLabel" for="clientEmail">Email</label>
+              <input type="email" id="clientEmail" />
+            </div>
           </div>
         </details>
 
         <!-- Invoice -->
-        <details class="form-block" open>
+        <details class="form-block">
           <summary data-translate-key="invoiceSectionTitle">Invoice</summary>
-          <div class="grid-2-col" style="margin-top: 1rem">
-            <div class="form-group">
-              <label for="invoiceNumber" data-translate-key="invoiceNumLabel">Invoice Number *</label>
-              <input id="invoiceNumber" required />
-            </div>
-            <div class="form-group">
-              <label for="currency" data-translate-key="currencyLabel">Currency</label>
-              <select id="currency"></select>
-            </div>
-            <div class="form-group">
-              <label for="invoiceDate" data-translate-key="invoiceDateLabel">Invoice Date</label>
-              <input type="date" id="invoiceDate" />
-            </div>
-            <div class="form-group">
-              <label for="dueDate" data-translate-key="dueDateLabel">Due Date</label>
-              <input type="date" id="dueDate" />
+          <div class="form-inner">
+            <div class="grid-2">
+              <div class="form-group">
+                <label data-translate-key="invoiceNumLabel" for="invoiceNumber">Invoice # *</label>
+                <input id="invoiceNumber" required />
+              </div>
+              <div class="form-group">
+                <label data-translate-key="currencyLabel" for="currency">Currency</label>
+                <select id="currency"></select>
+              </div>
+              <div class="form-group">
+                <label data-translate-key="invoiceDateLabel" for="invoiceDate">Date</label>
+                <input type="date" id="invoiceDate" />
+              </div>
+              <div class="form-group">
+                <label data-translate-key="dueDateLabel" for="dueDate">Due</label>
+                <input type="date" id="dueDate" />
+              </div>
             </div>
           </div>
         </details>
@@ -444,572 +223,54 @@
         <!-- Items -->
         <details class="form-block" open>
           <summary data-translate-key="itemsSectionTitle">Items</summary>
-          <div id="items-header">
-            <label data-translate-key="itemDescLabel">Description</label>
-            <label data-translate-key="itemQtyLabel">Qty</label>
-            <label data-translate-key="itemRateLabel">Rate</label>
+          <div class="form-inner">
+            <div id="items-header">
+              <label data-translate-key="itemDescLabel">Description</label>
+              <label data-translate-key="itemQtyLabel">Qty</label>
+              <label data-translate-key="itemRateLabel">Rate</label>
+            </div>
+            <div id="items-container"></div>
+            <button type="button" class="btn-add-item" id="addItemBtn" data-translate-key="addItem">+ Add Item</button>
           </div>
-          <div id="items-container"></div>
-          <button type="button" id="addItemBtn" class="btn-add-item" data-translate-key="addItem">+ Add Item</button>
         </details>
 
-        <!-- Payment & notes -->
-        <details class="form-block" open>
+        <!-- Payment -->
+        <details class="form-block">
           <summary data-translate-key="totalsSectionTitle">Payment & Notes</summary>
-          <div class="grid-2-col" style="margin-top: 1rem">
-            <div class="form-group">
-              <label for="discount" data-translate-key="discountLabel">Discount</label>
-              <input id="discount" placeholder="10% or 50" />
+          <div class="form-inner">
+            <div class="grid-2">
+              <div class="form-group">
+                <label data-translate-key="discountLabel" for="discount">Discount</label>
+                <input id="discount" placeholder="10% or 50" />
+              </div>
+              <div class="form-group">
+                <label data-translate-key="taxRateLabel" for="taxRate">Tax %</label>
+                <input type="number" step="0.01" id="taxRate" />
+              </div>
             </div>
             <div class="form-group">
-              <label for="taxRate" data-translate-key="taxRateLabel">Tax %</label>
-              <input id="taxRate" type="number" step="0.01" />
+              <label data-translate-key="paymentLinkLabel" for="paymentLink">Payment link</label>
+              <input id="paymentLink" type="url" data-translate-key="paymentLinkPlaceholder" placeholder="https://example.com/pay" />
             </div>
-          </div>
-          <div class="form-group">
-            <label for="paymentLink" data-translate-key="paymentLinkLabel">Payment link</label>
-            <input id="paymentLink" type="url" placeholder="https://example.com/pay" />
-          </div>
-          <div class="form-group">
-            <label for="notes" data-translate-key="notesLabel">Notes</label>
-            <textarea id="notes" rows="3"></textarea>
+            <div class="form-group">
+              <label data-translate-key="notesLabel" for="notes">Notes</label>
+              <textarea id="notes" rows="3"></textarea>
+            </div>
           </div>
         </details>
       </form>
-      <footer class="app-footer">
-        © <span id="year"></span> • Designed with ❤️ by <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a>
-      </footer>
-    </section>
-
-    <!-- Preview panel -->
-    <aside class="panel panel-preview" id="panelPreview">
-      <div class="preview-wrapper" id="previewContainer"></div>
+      <footer class="app-footer">© <span id="year"></span> • <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a></footer>
     </aside>
+
+    <!-- Preview -->
+    <section class="panel panel-preview" id="panelPreview">
+      <div class="preview-wrapper" id="previewContainer"></div>
+    </section>
   </main>
 
   <!-- Script -->
   <script>
-    // Wrap everything in an IIFE to avoid polluting global scope
     (() => {
-      const UI = {};
-      const stateKey = "invoiceAppStateV5";
-      let state = {};
-
-      /* -------------------------- helpers -------------------------- */
-      const $ = (id) => document.getElementById(id);
-      const todayISO = () => new Date().toISOString().split("T")[0];
-      const addDays = (d, days) => {
-        const nd = new Date(d);
-        nd.setDate(nd.getDate() + days);
-        return nd.toISOString().split("T")[0];
-      };
-      const currencyMap = {
-        USD: "$",
-        EUR: "€",
-        GBP: "£",
-        JPY: "¥",
-        CAD: "C$",
-        AUD: "A$",
-        CHF: "Fr",
-        CNY: "¥",
-      };
-
-      const formatCurrency = (value, code, lang) =>
-        new Intl.NumberFormat(lang, { style: "currency", currency: code }).format(value);
-
-      /* -------------------------- initial state -------------------------- */
-      const getDefaultState = () => {
-        const lang = navigator.language.split("-")[0] || "en";
-        return {
-          lang,
-          theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
-          companyName: "",
-          logo: null,
-          companyAddress: "",
-          companyEmail: "",
-          companyPhone: "",
-          clientName: "",
-          clientAddress: "",
-          clientEmail: "",
-          invoiceNumber: `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`,
-          currency: "USD",
-          invoiceDate: todayISO(),
-          dueDate: addDays(new Date(), 30),
-          items: [{ description: "", quantity: 1, rate: 0 }],
-          discount: "",
-          taxRate: "",
-          notes: "",
-          paymentLink: "",
-          totals: { subtotal: 0, discount: 0, tax: 0, total: 0 },
-        };
-      };
-
-      /* -------------------------- DOM cache -------------------------- */
-      const cacheDOM = () => {
-        Object.assign(UI, {
-          year: $("year"),
-          themeToggle: $("themeToggle"),
-          resetBtn: $("resetBtn"),
-          languageSelector: $("languageSelector"),
-          downloadBtn: $("downloadBtn"),
-          printBtn: $("printBtn"),
-          showPreviewBtn: $("showPreviewBtn"),
-          panelPreview: $("panelPreview"),
-          previewContainer: $("previewContainer"),
-          addItemBtn: $("addItemBtn"),
-          itemsContainer: $("items-container"),
-          logoUpload: $("logoUpload"),
-          form: $("invoiceForm"),
-        });
-      };
-
-      /* -------------------------- state helpers -------------------------- */
-      const saveState = () => localStorage.setItem(stateKey, JSON.stringify(state));
-      const loadState = () => {
-        try {
-          state = JSON.parse(localStorage.getItem(stateKey)) || getDefaultState();
-        } catch {
-          state = getDefaultState();
-        }
-      };
-
-      /* -------------------------- UI renderers -------------------------- */
-      const populateSelects = () => {
-        // currency
-        $("currency").innerHTML = Object.entries(currencyMap)
-          .map(([code, symbol]) => `<option value="${code}">${code} (${symbol})</option>`) 
-          .join("");
-        // language (basic list)
-        const langs = ["en", "es", "fr", "de", "it", "pt", "ru", "sl"];
-        $("languageSelector").innerHTML = langs
-          .map((l) => {
-            const name = new Intl.DisplayNames([l], { type: "language" }).of(l);
-            return `<option value="${l}">${name}</option>`;
-          })
-          .join("");
-      };
-
-      const updateFormInputs = () => {
-        [
-          "companyName",
-          "companyAddress",
-          "companyEmail",
-          "companyPhone",
-          "clientName",
-          "clientAddress",
-          "clientEmail",
-          "invoiceNumber",
-          "currency",
-          "invoiceDate",
-          "dueDate",
-          "discount",
-          "taxRate",
-          "notes",
-          "paymentLink",
-        ].forEach((key) => {
-          const el = $(key);
-          if (!el) return;
-          el.value = state[key] ?? "";
-        });
-      };
-
-      const renderItems = () => {
-        UI.itemsContainer.innerHTML = "";
-        state.items.forEach((item, idx) => {
-          const row = document.createElement("div");
-          row.className = "item-row";
-          row.innerHTML = `
-            <input class="item-description" data-idx="${idx}" placeholder="Item" value="${item.description}" />
-            <input type="number" min="0" step="1" class="item-quantity" data-idx="${idx}" value="${item.quantity}" />
-            <input type="number" min="0" step="0.01" class="item-rate" data-idx="${idx}" value="${item.rate}" />
-            <button class="btn-remove-item" data-idx="${idx}" title="Remove">❌</button>`;
-          UI.itemsContainer.appendChild(row);
-        });
-      };
-
-      const calculateTotals = () => {
-        const subtotal = state.items.reduce(
-          (sum, it) => sum + (parseFloat(it.quantity) || 0) * (parseFloat(it.rate) || 0),
-          0
-        );
-        // discount
-        let discountVal = 0;
-        if (String(state.discount).includes("%")) {
-          discountVal = subtotal * (parseFloat(state.discount) / 100 || 0);
-        } else {
-          discountVal = parseFloat(state.discount) || 0;
-        }
-        const afterDisc = subtotal - discountVal;
-        const taxVal = afterDisc * ((parseFloat(state.taxRate) || 0) / 100);
-        const total = afterDisc + taxVal;
-        state.totals = { subtotal, discount: discountVal, tax: taxVal, total };
-      };
-
-      const renderPreview = () => {
-        calculateTotals();
-        const cur = state.currency;
-        const lang = state.lang;
-        const fmt = (v) => formatCurrency(v, cur, lang);
-
-        const itemsRows = state.items
-          .map(
-            (it) => `<tr>
-              <td>${it.description || ""}</td>
-              <td style="text-align:center">${it.quantity || 0}</td>
-              <td style="text-align:right">${fmt(parseFloat(it.rate) || 0)}</td>
-              <td style="text-align:right">${fmt((parseFloat(it.rate) || 0) * (parseFloat(it.quantity) || 0))}</td>
-            </tr>`
-          )
-          .join("");
-
-        UI.previewContainer.innerHTML = `
-          <table style="width:100%; margin-bottom:2rem">
-            <tr>
-              <td style="width:50%; vertical-align:top">
-                ${state.logo ? `<img src="${state.logo}" style="max-width:160px; max-height:80px" />` : `<h1 style="margin:0">INVOICE</h1>`}
-              </td>
-              <td style="width:50%; text-align:right; vertical-align:top">
-                <h3 style="margin-bottom:0.4rem">${state.companyName}</h3>
-                <p style="white-space:pre-wrap; color:#6b7280">${state.companyAddress}</p>
-              </td>
-            </tr>
-          </table>
-
-          <table style="width:100%; margin-bottom:2.2rem">
-            <tr>
-              <td style="width:50%; vertical-align:top">
-                <strong>Bill To</strong><br/>
-                ${state.clientName}<br />
-                <span style="white-space:pre-wrap">${state.clientAddress}</span><br />
-                ${state.clientEmail}
-              </td>
-              <td style="width:50%; text-align:right; vertical-align:top">
-                <strong>Details</strong><br />
-                Invoice #: ${state.invoiceNumber}<br />
-                Date: ${state.invoiceDate}<br />
-                Due: ${state.dueDate}
-              </td>
-            </tr>
-          </table>
-
-          <table style="width:100%; border-collapse:collapse; font-size:13px">
-            <thead>
-              <tr style="background:#f3f4f6">
-                <th style="text-align:left; padding:0.6rem">Item</th>
-                <th style="text-align:center; padding:0.6rem">Qty</th>
-                <th style="text-align:right; padding:0.6rem">Rate</th>
-                <th style="text-align:right; padding:0.6rem">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsRows}
-            </tbody>
-          </table>
-
-          <table style="width:100%; margin-top:1.8rem">
-            <tr>
-              <td style="width:60%">${
-                state.paymentLink
-                  ? `<a href="${state.paymentLink}" target="_blank" style="background:#111827;color:#fff;padding:0.55rem 1.2rem;border-radius:6px;text-decoration:none;font-weight:600">Pay Now</a>`
-                  : ""
-              }</td>
-              <td style="width:40%; text-align:right; font-size:13px">
-                Subtotal: ${fmt(state.totals.subtotal)}<br />
-                ${state.totals.discount > 0 ? `Discount: -${fmt(state.totals.discount)}<br />` : ""}
-                ${state.totals.tax > 0 ? `Tax: ${fmt(state.totals.tax)}<br />` : ""}
-                <strong style="font-size:1.1rem">Total: ${fmt(state.totals.total)}</strong>
-              </td>
-            </tr>
-          </table>
-
-          ${state.notes ? `<div style="margin-top:1.8rem"><strong>Notes:</strong><br /><p style="white-space:pre-wrap;color:#6b7280">${state.notes}</p></div>` : ""}
-        `;
-      };
-
-      /* -------------------------- theme -------------------------- */
-      const applyTheme = () => {
-        document.documentElement.setAttribute("data-theme", state.theme);
-        UI.themeToggle.textContent = state.theme === "dark" ? "☀️" : "🌙";
-      };
-
-      /* -------------------------- events -------------------------- */
-      const attachEvents = () => {
-        // generic input handling
-        UI.form.addEventListener("input", (ev) => {
-          const t = ev.target;
-          if (t.id && state.hasOwnProperty(t.id)) {
-            state[t.id] = t.value;
-          }
-          if (t.classList.contains("item-description") || t.classList.contains("item-quantity") || t.classList.contains("item-rate")) {
-            const idx = t.dataset.idx;
-            const key = t.className.split("-")[1];
-            state.items[idx][key] = t.value;
-          }
-          renderPreview();
-          saveState();
-        });
-
-        // add item
-        UI.addItemBtn.addEventListener("click", () => {
-          state.items.push({ description: "", quantity: 1, rate: 0 });
-          renderItems();
-          renderPreview();
-          saveState();
-        });
-
-        // remove item
-        UI.itemsContainer.addEventListener("click", (ev) => {
-          if (ev.target.classList.contains("btn-remove-item")) {
-            const idx = ev.target.dataset.idx;
-            if (state.items.length > 1) {
-              state.items.splice(idx, 1);
-              renderItems();
-              renderPreview();
-              saveState();
-            }
-          }
-        });
-
-        // theme toggle
-        UI.themeToggle.addEventListener("click", () => {
-          state.theme = state.theme === "light" ? "dark" : "light";
-          applyTheme();
-          saveState();
-        });
-
-        // reset
-        UI.resetBtn.addEventListener("click", () => {
-          if (confirm("Reset the form?")) {
-            state = getDefaultState();
-            UI.logoUpload.value = "";
-            updateFormInputs();
-            renderItems();
-            renderPreview();
-            applyTheme();
-            saveState();
-          }
-        });
-
-        // logo upload
-        UI.logoUpload.addEventListener("change", (ev) => {
-          const file = ev.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            state.logo = e.target.result;
-            renderPreview();
-            saveState();
-          };
-          reader.readAsDataURL(file);
-        });
-
-        // language
-        UI.languageSelector.addEventListener("change", (ev) => {
-          state.lang = ev.target.value;
-          renderPreview();
-          saveState();
-        });
-
-        // show preview on mobile
-        UI.showPreviewBtn.addEventListener("click", () => {
-          UI.panelPreview.classList.add("visible");
-        });
-        UI.panelPreview.addEventListener("click", (e) => {
-          if (e.target === UI.panelPreview) UI.panelPreview.classList.remove("visible");
-        });
-
-        // download pdf
-        UI.downloadBtn.addEventListener("click", async () => {
-          if (!validateRequired()) return;
-          setLoading(UI.downloadBtn, true);
-          try {
-            const doc = await createPDF();
-            doc.save(`Invoice_${state.invoiceNumber}.pdf`);
-          } catch (err) {
-            alert("Download failed. Check console.");
-            console.error(err);
-          } finally {
-            setLoading(UI.downloadBtn, false);
-          }
-        });
-
-        // print
-        UI.printBtn.addEventListener("click", async () => {
-          if (!validateRequired()) return;
-          setLoading(UI.printBtn, true);
-          try {
-            const doc = await createPDF();
-            const blobURL = doc.output("bloburl");
-            const iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            iframe.src = blobURL;
-            document.body.appendChild(iframe);
-            iframe.onload = () => {
-              setTimeout(() => {
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-              }, 150);
-            };
-          } catch (err) {
-            alert("Print failed. Check console.");
-            console.error(err);
-          } finally {
-            setLoading(UI.printBtn, false);
-          }
-        });
-      };
-
-      /* -------------------------- validation & utils -------------------------- */
-      const requiredFields = ["companyName", "clientName", "invoiceNumber"];
-      const validateRequired = () => {
-        let ok = true;
-        requiredFields.forEach((f) => {
-          const el = $(f);
-          if (!el.value.trim()) {
-            el.classList.add("invalid");
-            ok = false;
-          } else {
-            el.classList.remove("invalid");
-          }
-        });
-        if (!ok) alert("Please fill in all required fields (marked with *).");
-        return ok;
-      };
-
-      const setLoading = (btn, isLoading) => {
-        if (isLoading) {
-          btn.disabled = true;
-          btn.classList.add("loading");
-        } else {
-          btn.disabled = false;
-          btn.classList.remove("loading");
-        }
-      };
-
-      /* -------------------------- PDF generation -------------------------- */
-      const createPDF = async () => {
-        if (!window.jspdf || !window.jspdf.jsPDF) throw new Error("jsPDF not loaded");
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: "mm", format: "a4" });
-
-        if (typeof doc.autoTable !== "function") throw new Error("autoTable plugin missing");
-
-        const margin = 15;
-        const pageW = doc.internal.pageSize.getWidth();
-        const fmt = (v) => formatCurrency(v, state.currency, state.lang);
-
-        // header (logo or title)
-        if (state.logo) {
-          const img = new Image();
-          img.src = state.logo;
-          await new Promise((r) => (img.onload = r));
-          const ar = img.width / img.height;
-          const h = 20;
-          const w = h * ar;
-          doc.addImage(state.logo, "PNG", margin, margin, w, h);
-        } else {
-          doc.setFontSize(22).setFont(undefined, "bold").text("INVOICE", margin, margin + 12);
-        }
-
-        // company info
-        doc.setFontSize(10);
-        doc.setTextColor(60);
-        const rightX = pageW - margin;
-        let y = margin + 4;
-        doc.text(state.companyName || "", rightX, y, { align: "right" });
-        y += 5;
-        if (state.companyAddress) {
-          const lines = doc.splitTextToSize(state.companyAddress, 60);
-          doc.text(lines, rightX, y, { align: "right" });
-          y += lines.length * 4.5;
-        }
-
-        // bill & details
-        y += 8;
-        doc.setTextColor(0).setFont(undefined, "bold");
-        doc.text("Bill To", margin, y);
-        doc.text("Details", pageW / 2 + 10, y);
-        y += 6;
-        doc.setFont(undefined, "normal").setTextColor(30);
-        doc.text(
-          [state.clientName, state.clientAddress, state.clientEmail].filter(Boolean).join("\n"),
-          margin,
-          y
-        );
-        doc.text(
-          [
-            `Invoice #: ${state.invoiceNumber}`,
-            `Date: ${state.invoiceDate}`,
-            `Due: ${state.dueDate}`,
-          ].join("\n"),
-          pageW / 2 + 10,
-          y
-        );
-
-        // table
-        const body = state.items.map((it) => [
-          it.description,
-          it.quantity,
-          fmt(it.rate),
-          fmt(it.quantity * it.rate),
-        ]);
-        doc.autoTable({
-          startY: y + 20,
-          head: [["Item", "Qty", "Rate", "Amount"]],
-          body,
-          theme: "grid",
-          headStyles: { fillColor: [17, 24, 39] },
-          styles: { fontSize: 9, cellPadding: 2.2 },
-          columnStyles: { 1: { halign: "center" }, 2: { halign: "right" }, 3: { halign: "right" } },
-        });
-
-        let tY = doc.lastAutoTable.finalY + 8;
-        doc.setFontSize(10);
-        doc.text(`Subtotal: ${fmt(state.totals.subtotal)}`, rightX, tY, { align: "right" });
-        tY += 5;
-        if (state.totals.discount) {
-          doc.text(`Discount: -${fmt(state.totals.discount)}`, rightX, tY, { align: "right" });
-          tY += 5;
-        }
-        if (state.totals.tax) {
-          doc.text(`Tax: ${fmt(state.totals.tax)}`, rightX, tY, { align: "right" });
-          tY += 5;
-        }
-        doc.setFont(undefined, "bold").text(`Total: ${fmt(state.totals.total)}`, rightX, tY, { align: "right" });
-        tY += 12;
-
-        if (state.paymentLink) {
-          doc.setTextColor(38, 104, 218).setFont(undefined, "normal");
-          doc.textWithLink("Pay Now", margin, tY, { url: state.paymentLink });
-          tY += 6;
-        }
-
-        if (state.notes) {
-          doc.setTextColor(0).setFont(undefined, "bold").text("Notes:", margin, tY);
-          doc.setFont(undefined, "normal").setTextColor(50);
-          const noteLines = doc.splitTextToSize(state.notes, pageW - margin * 2);
-          doc.text(noteLines, margin, tY + 5);
-        }
-
-        return doc;
-      };
-
-      /* -------------------------- init -------------------------- */
-      const init = () => {
-        loadState();
-        cacheDOM();
-        populateSelects();
-        updateFormInputs();
-        renderItems();
-        renderPreview();
-        applyTheme();
-        attachEvents();
-        UI.year.textContent = new Date().getFullYear();
-        saveState();
-      };
-
-      document.addEventListener("DOMContentLoaded", init);
-    })();
-  </script>
-</body>
-</html>
+      /* ---------------- translations ---------------- */
+      const translations = {
+        en: { pageTitle: "Professional Invoice Generator", downloadPDF: "Download PDF", printPDF: "Print", companySectionTitle: "Your Company", companyNameLabel: "Company Name *", logoLabel: "Logo", addressLabel: "Address", emailLabel: "Email", phoneLabel: "Phone", clientSectionTitle: "Client", clientNameLabel: "Client Name *", invoiceSectionTitle: "Invoice", invoiceNumLabel: "Invoice # *", currencyLabel: "Currency", invoiceDateLabel: "Date", due
