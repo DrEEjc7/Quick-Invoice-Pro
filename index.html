@@ -104,7 +104,7 @@
             border-radius: 6px;
             box-shadow: 0 4px 16px var(--shadow-color);
             max-width: 820px; margin: 0 auto;
-            color: #111827; /* Preview is always black on white for print fidelity */
+            color: #111827;
         }
         #invoice-preview-container { font-size: 13px; line-height: 1.6; }
         #invoice-preview-container h1 { font-size: 2.8rem; font-weight: 300; letter-spacing: -1.5px; }
@@ -143,8 +143,6 @@
   </header>
 
   <main class="app-container">
-
-    <!-- ==== LEFT PANEL: FORM ==== -->
     <div class="panel panel-form">
       <div class="form-container">
         <div class="form-block">
@@ -189,7 +187,7 @@
         </div>
         
         <div class="form-block">
-            <h2 class="form-block-title" data-translate-key="totalsSectionTitle">Totals & Notes</h2>
+            <h2 class="form-block-title" data-translate-key="totalsSectionTitle">Payment & Notes</h2>
             <div class="grid-2-col">
                 <div class="form-group"><label for="discount" data-translate-key="discountLabel">Discount (e.g., 50 or 10%)</label><input type="text" id="discount"></div>
                 <div class="form-group"><label for="taxRate" data-translate-key="taxRateLabel">Tax Rate (%)</label><input type="number" id="taxRate" step="0.01"></div>
@@ -223,18 +221,17 @@ const App = {
 
     // TRANSLATIONS DICTIONARY
     translations: {
-        en: { pageTitle: "Professional Invoice Generator", companySectionTitle: "Your Company", companyNameLabel: "Company Name *", logoLabel: "Company Logo", addressLabel: "Address", emailLabel: "Email", phoneLabel: "Phone", clientSectionTitle: "Client", clientNameLabel: "Client Name *", invoiceSectionTitle: "Invoice", invoiceNumLabel: "Invoice Number *", currencyLabel: "Currency", invoiceDateLabel: "Date", dueDateLabel: "Due Date", itemsSectionTitle: "Invoice Items", itemDescLabel: "Description", itemQtyLabel: "Qty", itemRateLabel: "Rate", addItem: "+ Add Item", totalsSectionTitle: "Payment", discountLabel: "Discount (e.g., 50 or 10%)", taxRateLabel: "Tax Rate (%)", notesLabel: "Notes", paymentLinkLabel: "Payment Link (Optional)", downloadPDF: "Download PDF", downloadDOCX: "Download DOCX", fromLabel: "From", toLabel: "Bill To", detailsLabel: "Details", itemCol: "Item", qtyCol: "Qty", rateCol: "Rate", amountCol: "Amount", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Are you sure you want to reset the form? All data will be cleared.", payNow: "Pay Now" },
-        es: { pageTitle: "Generador de Facturas Profesional", companySectionTitle: "Tu Empresa", companyNameLabel: "Nombre de la Empresa *", logoLabel: "Logo", addressLabel: "Dirección", emailLabel: "Correo", phoneLabel: "Teléfono", clientSectionTitle: "Cliente", clientNameLabel: "Nombre del Cliente *", invoiceSectionTitle: "Factura", invoiceNumLabel: "Nº de Factura *", currencyLabel: "Moneda", invoiceDateLabel: "Fecha", dueDateLabel: "Vencimiento", itemsSectionTitle: "Artículos", itemDescLabel: "Descripción", itemQtyLabel: "Cant.", itemRateLabel: "Precio", addItem: "+ Añadir Artículo", totalsSectionTitle: "Pago", discountLabel: "Descuento (ej. 50 o 10%)", taxRateLabel: "Impuestos (%)", notesLabel: "Notas", paymentLinkLabel: "Enlace de Pago (Opcional)", downloadPDF: "Descargar PDF", downloadDOCX: "Descargar DOCX", fromLabel: "De", toLabel: "Facturar a", detailsLabel: "Detalles", itemCol: "Artículo", qtyCol: "Cant.", rateCol: "Precio", amountCol: "Importe", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "¿Estás seguro de que quieres reiniciar el formulario?", payNow: "Pagar Ahora" },
+        en: { pageTitle: "Professional Invoice Generator", companySectionTitle: "Your Company", companyNameLabel: "Company Name *", logoLabel: "Company Logo", addressLabel: "Address", emailLabel: "Email", phoneLabel: "Phone", clientSectionTitle: "Client", clientNameLabel: "Client Name *", invoiceSectionTitle: "Invoice", invoiceNumLabel: "Invoice Number *", currencyLabel: "Currency", invoiceDateLabel: "Date", dueDateLabel: "Due Date", itemsSectionTitle: "Invoice Items", itemDescLabel: "Description", itemQtyLabel: "Qty", itemRateLabel: "Rate", addItem: "+ Add Item", totalsSectionTitle: "Payment & Notes", discountLabel: "Discount (e.g., 50 or 10%)", taxRateLabel: "Tax Rate (%)", notesLabel: "Notes", paymentLinkLabel: "Payment Link (Optional)", downloadPDF: "Download PDF", downloadDOCX: "Download DOCX", fromLabel: "From", toLabel: "Bill To", detailsLabel: "Details", itemCol: "Item", qtyCol: "Qty", rateCol: "Rate", amountCol: "Amount", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Are you sure you want to reset the form? All data will be cleared.", payNow: "Pay Now" },
+        es: { pageTitle: "Generador de Facturas Profesional", companySectionTitle: "Tu Empresa", companyNameLabel: "Nombre de la Empresa *", logoLabel: "Logo", addressLabel: "Dirección", emailLabel: "Correo", phoneLabel: "Teléfono", clientSectionTitle: "Cliente", clientNameLabel: "Nombre del Cliente *", invoiceSectionTitle: "Factura", invoiceNumLabel: "Nº de Factura *", currencyLabel: "Moneda", invoiceDateLabel: "Fecha", dueDateLabel: "Vencimiento", itemsSectionTitle: "Artículos", itemDescLabel: "Descripción", itemQtyLabel: "Cant.", itemRateLabel: "Precio", addItem: "+ Añadir Artículo", totalsSectionTitle: "Pago y Notas", discountLabel: "Descuento (ej. 50 o 10%)", taxRateLabel: "Impuestos (%)", notesLabel: "Notas", paymentLinkLabel: "Enlace de Pago (Opcional)", downloadPDF: "Descargar PDF", downloadDOCX: "Descargar DOCX", fromLabel: "De", toLabel: "Facturar a", detailsLabel: "Detalles", itemCol: "Artículo", qtyCol: "Cant.", rateCol: "Precio", amountCol: "Importe", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "¿Estás seguro de que quieres reiniciar el formulario?", payNow: "Pagar Ahora" },
         // ... (other languages can be added here following the same key structure)
-        it: { pageTitle: "Generatore di Fatture Professionale", companySectionTitle: "La Tua Azienda", companyNameLabel: "Nome Azienda *", logoLabel: "Logo Azienda", addressLabel: "Indirizzo", emailLabel: "Email", phoneLabel: "Telefono", clientSectionTitle: "Cliente", clientNameLabel: "Nome Cliente *", invoiceSectionTitle: "Fattura", invoiceNumLabel: "Numero Fattura *", currencyLabel: "Valuta", invoiceDateLabel: "Data", dueDateLabel: "Scadenza", itemsSectionTitle: "Voci Fattura", itemDescLabel: "Descrizione", itemQtyLabel: "Qtà", itemRateLabel: "Prezzo", addItem: "+ Aggiungi Voce", totalsSectionTitle: "Pagamento", discountLabel: "Sconto (es. 50 o 10%)", taxRateLabel: "Aliquota IVA (%)", notesLabel: "Note", paymentLinkLabel: "Link Pagamento (Opzionale)", downloadPDF: "Scarica PDF", downloadDOCX: "Scarica DOCX", fromLabel: "Da", toLabel: "Fattura A", detailsLabel: "Dettagli", itemCol: "Voce", qtyCol: "Qtà", rateCol: "Prezzo", amountCol: "Importo", subtotalLabel: "Subtotale", totalLabel: "Totale", notesPreviewLabel: "Note:", resetConfirm: "Sei sicuro di voler reimpostare il modulo?", payNow: "Paga Adesso" },
-        pt: { pageTitle: "Gerador de Faturas Profissional", companySectionTitle: "Sua Empresa", companyNameLabel: "Nome da Empresa *", logoLabel: "Logotipo", addressLabel: "Endereço", emailLabel: "Email", phoneLabel: "Telefone", clientSectionTitle: "Cliente", clientNameLabel: "Nome do Cliente *", invoiceSectionTitle: "Fatura", invoiceNumLabel: "Nº da Fatura *", currencyLabel: "Moeda", invoiceDateLabel: "Data", dueDateLabel: "Vencimento", itemsSectionTitle: "Itens da Fatura", itemDescLabel: "Descrição", itemQtyLabel: "Qtd", itemRateLabel: "Taxa", addItem: "+ Adicionar Item", totalsSectionTitle: "Pagamento", discountLabel: "Desconto (ex: 50 ou 10%)", taxRateLabel: "Imposto (%)", notesLabel: "Notas", paymentLinkLabel: "Link de Pagamento (Opcional)", downloadPDF: "Baixar PDF", downloadDOCX: "Baixar DOCX", fromLabel: "De", toLabel: "Faturar Para", detailsLabel: "Detalhes", itemCol: "Item", qtyCol: "Qtd", rateCol: "Taxa", amountCol: "Valor", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "Tem certeza que deseja redefinir o formulário?", payNow: "Pagar Agora" },
-        fr: { pageTitle: "Générateur de Factures Professionnel", companySectionTitle: "Votre Entreprise", companyNameLabel: "Nom de l'entreprise *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "E-mail", phoneLabel: "Téléphone", clientSectionTitle: "Client", clientNameLabel: "Nom du client *", invoiceSectionTitle: "Facture", invoiceNumLabel: "Nº de facture *", currencyLabel: "Devise", invoiceDateLabel: "Date", dueDateLabel: "Échéance", itemsSectionTitle: "Éléments", itemDescLabel: "Description", itemQtyLabel: "Qté", itemRateLabel: "Taux", addItem: "+ Ajouter un élément", totalsSectionTitle: "Paiement", discountLabel: "Remise (ex: 50 ou 10%)", taxRateLabel: "Taxe (%)", notesLabel: "Notes", paymentLinkLabel: "Lien de paiement (Optionnel)", downloadPDF: "Télécharger PDF", downloadDOCX: "Télécharger DOCX", fromLabel: "De", toLabel: "Facturer à", detailsLabel: "Détails", itemCol: "Élément", qtyCol: "Qté", rateCol: "Taux", amountCol: "Montant", subtotalLabel: "Sous-total", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Êtes-vous sûr de vouloir réinitialiser le formulaire?", payNow: "Payer Maintenant" },
-        de: { pageTitle: "Professioneller Rechnungsgenerator", companySectionTitle: "Ihre Firma", companyNameLabel: "Firmenname *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "Email", phoneLabel: "Telefon", clientSectionTitle: "Kunde", clientNameLabel: "Kundenname *", invoiceSectionTitle: "Rechnung", invoiceNumLabel: "Rechnungs-Nr. *", currencyLabel: "Währung", invoiceDateLabel: "Datum", dueDateLabel: "Fällig am", itemsSectionTitle: "Posten", itemDescLabel: "Beschreibung", itemQtyLabel: "Menge", itemRateLabel: "Satz", addItem: "+ Posten hinzufügen", totalsSectionTitle: "Zahlung", discountLabel: "Rabatt (z.B. 50 oder 10%)", taxRateLabel: "Steuer (%)", notesLabel: "Notizen", paymentLinkLabel: "Zahlungslink (Optional)", downloadPDF: "PDF herunterladen", downloadDOCX: "DOCX herunterladen", fromLabel: "Von", toLabel: "Rechnung an", detailsLabel: "Details", itemCol: "Posten", qtyCol: "Menge", rateCol: "Satz", amountCol: "Betrag", subtotalLabel: "Zwischensumme", totalLabel: "Gesamt", notesPreviewLabel: "Notizen:", resetConfirm: "Formular wirklich zurücksetzen?", payNow: "Jetzt bezahlen" },
-        ru: { pageTitle: "Генератор Счетов", companySectionTitle: "Ваша компания", companyNameLabel: "Название компании *", logoLabel: "Логотип", addressLabel: "Адрес", emailLabel: "Эл. почта", phoneLabel: "Телефон", clientSectionTitle: "Клиент", clientNameLabel: "Имя клиента *", invoiceSectionTitle: "Счет", invoiceNumLabel: "№ счета *", currencyLabel: "Валюта", invoiceDateLabel: "Дата", dueDateLabel: "Срок оплаты", itemsSectionTitle: "Позиции счета", itemDescLabel: "Описание", itemQtyLabel: "Кол-во", itemRateLabel: "Ставка", addItem: "+ Добавить", totalsSectionTitle: "Оплата", discountLabel: "Скидка (напр. 50 или 10%)", taxRateLabel: "Налог (%)", notesLabel: "Примечания", paymentLinkLabel: "Ссылка на оплату (необязательно)", downloadPDF: "Скачать PDF", downloadDOCX: "Скачать DOCX", fromLabel: "От", toLabel: "Счет для", detailsLabel: "Детали", itemCol: "Позиция", qtyCol: "Кол-во", rateCol: "Ставка", amountCol: "Сумма", subtotalLabel: "Подытог", totalLabel: "Итог", notesPreviewLabel: "Примечания:", resetConfirm: "Вы уверены, что хотите сбросить форму?", payNow: "Оплатить сейчас" },
-        sl: { pageTitle: "Generator Računov", companySectionTitle: "Vaše podjetje", companyNameLabel: "Ime podjetja *", logoLabel: "Logotip", addressLabel: "Naslov", emailLabel: "E-pošta", phoneLabel: "Telefon", clientSectionTitle: "Stranka", clientNameLabel: "Ime stranke *", invoiceSectionTitle: "Račun", invoiceNumLabel: "Št. računa *", currencyLabel: "Valuta", invoiceDateLabel: "Datum", dueDateLabel: "Rok plačila", itemsSectionTitle: "Postavke", itemDescLabel: "Opis", itemQtyLabel: "Kol.", itemRateLabel: "Cena", addItem: "+ Dodaj postavko", totalsSectionTitle: "Plačilo", discountLabel: "Popust (npr. 50 ali 10%)", taxRateLabel: "Davek (%)", notesLabel: "Opombe", paymentLinkLabel: "Povezava za plačilo (Opcijsko)", downloadPDF: "Prenesi PDF", downloadDOCX: "Prenesi DOCX", fromLabel: "Od", toLabel: "Račun za", detailsLabel: "Podrobnosti", itemCol: "Postavka", qtyCol: "Kol.", rateCol: "Cena", amountCol: "Znesek", subtotalLabel: "Skupaj brez DDV", totalLabel: "Skupaj", notesPreviewLabel: "Opombe:", resetConfirm: "Ali ste prepričani, da želite ponastaviti obrazec?", payNow: "Plačaj zdaj" }
+        it: { pageTitle: "Generatore di Fatture Professionale", companySectionTitle: "La Tua Azienda", companyNameLabel: "Nome Azienda *", logoLabel: "Logo Azienda", addressLabel: "Indirizzo", emailLabel: "Email", phoneLabel: "Telefono", clientSectionTitle: "Cliente", clientNameLabel: "Nome Cliente *", invoiceSectionTitle: "Fattura", invoiceNumLabel: "Numero Fattura *", currencyLabel: "Valuta", invoiceDateLabel: "Data", dueDateLabel: "Scadenza", itemsSectionTitle: "Voci Fattura", itemDescLabel: "Descrizione", itemQtyLabel: "Qtà", itemRateLabel: "Prezzo", addItem: "+ Aggiungi Voce", totalsSectionTitle: "Pagamento e Note", discountLabel: "Sconto (es. 50 o 10%)", taxRateLabel: "Aliquota IVA (%)", notesLabel: "Note", paymentLinkLabel: "Link Pagamento (Opzionale)", downloadPDF: "Scarica PDF", downloadDOCX: "Scarica DOCX", fromLabel: "Da", toLabel: "Fattura A", detailsLabel: "Dettagli", itemCol: "Voce", qtyCol: "Qtà", rateCol: "Prezzo", amountCol: "Importo", subtotalLabel: "Subtotale", totalLabel: "Totale", notesPreviewLabel: "Note:", resetConfirm: "Sei sicuro di voler reimpostare il modulo?", payNow: "Paga Adesso" },
+        pt: { pageTitle: "Gerador de Faturas Profissional", companySectionTitle: "Sua Empresa", companyNameLabel: "Nome da Empresa *", logoLabel: "Logotipo", addressLabel: "Endereço", emailLabel: "Email", phoneLabel: "Telefone", clientSectionTitle: "Cliente", clientNameLabel: "Nome do Cliente *", invoiceSectionTitle: "Fatura", invoiceNumLabel: "Nº da Fatura *", currencyLabel: "Moeda", invoiceDateLabel: "Data", dueDateLabel: "Vencimento", itemsSectionTitle: "Itens da Fatura", itemDescLabel: "Descrição", itemQtyLabel: "Qtd", itemRateLabel: "Taxa", addItem: "+ Adicionar Item", totalsSectionTitle: "Pagamento e Notas", discountLabel: "Desconto (ex: 50 ou 10%)", taxRateLabel: "Imposto (%)", notesLabel: "Notas", paymentLinkLabel: "Link de Pagamento (Opcional)", downloadPDF: "Baixar PDF", downloadDOCX: "Baixar DOCX", fromLabel: "De", toLabel: "Faturar Para", detailsLabel: "Detalhes", itemCol: "Item", qtyCol: "Qtd", rateCol: "Taxa", amountCol: "Valor", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "Tem certeza que deseja redefinir o formulário?", payNow: "Pagar Agora" },
+        fr: { pageTitle: "Générateur de Factures Professionnel", companySectionTitle: "Votre Entreprise", companyNameLabel: "Nom de l'entreprise *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "E-mail", phoneLabel: "Téléphone", clientSectionTitle: "Client", clientNameLabel: "Nom du client *", invoiceSectionTitle: "Facture", invoiceNumLabel: "Nº de facture *", currencyLabel: "Devise", invoiceDateLabel: "Date", dueDateLabel: "Échéance", itemsSectionTitle: "Éléments", itemDescLabel: "Description", itemQtyLabel: "Qté", itemRateLabel: "Taux", addItem: "+ Ajouter un élément", totalsSectionTitle: "Paiement et Notes", discountLabel: "Remise (ex: 50 ou 10%)", taxRateLabel: "Taxe (%)", notesLabel: "Notes", paymentLinkLabel: "Lien de paiement (Optionnel)", downloadPDF: "Télécharger PDF", downloadDOCX: "Télécharger DOCX", fromLabel: "De", toLabel: "Facturer à", detailsLabel: "Détails", itemCol: "Élément", qtyCol: "Qté", rateCol: "Taux", amountCol: "Montant", subtotalLabel: "Sous-total", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Êtes-vous sûr de vouloir réinitialiser le formulaire?", payNow: "Payer Maintenant" },
+        de: { pageTitle: "Professioneller Rechnungsgenerator", companySectionTitle: "Ihre Firma", companyNameLabel: "Firmenname *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "Email", phoneLabel: "Telefon", clientSectionTitle: "Kunde", clientNameLabel: "Kundenname *", invoiceSectionTitle: "Rechnung", invoiceNumLabel: "Rechnungs-Nr. *", currencyLabel: "Währung", invoiceDateLabel: "Datum", dueDateLabel: "Fällig am", itemsSectionTitle: "Posten", itemDescLabel: "Beschreibung", itemQtyLabel: "Menge", itemRateLabel: "Satz", addItem: "+ Posten hinzufügen", totalsSectionTitle: "Zahlung & Notizen", discountLabel: "Rabatt (z.B. 50 oder 10%)", taxRateLabel: "Steuer (%)", notesLabel: "Notizen", paymentLinkLabel: "Zahlungslink (Optional)", downloadPDF: "PDF herunterladen", downloadDOCX: "DOCX herunterladen", fromLabel: "Von", toLabel: "Rechnung an", detailsLabel: "Details", itemCol: "Posten", qtyCol: "Menge", rateCol: "Satz", amountCol: "Betrag", subtotalLabel: "Zwischensumme", totalLabel: "Gesamt", notesPreviewLabel: "Notizen:", resetConfirm: "Formular wirklich zurücksetzen?", payNow: "Jetzt bezahlen" },
+        ru: { pageTitle: "Генератор Счетов", companySectionTitle: "Ваша компания", companyNameLabel: "Название компании *", logoLabel: "Логотип", addressLabel: "Адрес", emailLabel: "Эл. почта", phoneLabel: "Телефон", clientSectionTitle: "Клиент", clientNameLabel: "Имя клиента *", invoiceSectionTitle: "Счет", invoiceNumLabel: "№ счета *", currencyLabel: "Валюта", invoiceDateLabel: "Дата", dueDateLabel: "Срок оплаты", itemsSectionTitle: "Позиции счета", itemDescLabel: "Описание", itemQtyLabel: "Кол-во", itemRateLabel: "Ставка", addItem: "+ Добавить", totalsSectionTitle: "Оплата и Примечания", discountLabel: "Скидка (напр. 50 или 10%)", taxRateLabel: "Налог (%)", notesLabel: "Примечания", paymentLinkLabel: "Ссылка на оплату (необязательно)", downloadPDF: "Скачать PDF", downloadDOCX: "Скачать DOCX", fromLabel: "От", toLabel: "Счет для", detailsLabel: "Детали", itemCol: "Позиция", qtyCol: "Кол-во", rateCol: "Ставка", amountCol: "Сумма", subtotalLabel: "Подытог", totalLabel: "Итог", notesPreviewLabel: "Примечания:", resetConfirm: "Вы уверены, что хотите сбросить форму?", payNow: "Оплатить сейчас" },
+        sl: { pageTitle: "Generator Računov", companySectionTitle: "Vaše podjetje", companyNameLabel: "Ime podjetja *", logoLabel: "Logotip", addressLabel: "Naslov", emailLabel: "E-pošta", phoneLabel: "Telefon", clientSectionTitle: "Stranka", clientNameLabel: "Ime stranke *", invoiceSectionTitle: "Račun", invoiceNumLabel: "Št. računa *", currencyLabel: "Valuta", invoiceDateLabel: "Datum", dueDateLabel: "Rok plačila", itemsSectionTitle: "Postavke", itemDescLabel: "Opis", itemQtyLabel: "Kol.", itemRateLabel: "Cena", addItem: "+ Dodaj postavko", totalsSectionTitle: "Plačilo in Opombe", discountLabel: "Popust (npr. 50 ali 10%)", taxRateLabel: "Davek (%)", notesLabel: "Opombe", paymentLinkLabel: "Povezava za plačilo (Opcijsko)", downloadPDF: "Prenesi PDF", downloadDOCX: "Prenesi DOCX", fromLabel: "Od", toLabel: "Račun za", detailsLabel: "Podrobnosti", itemCol: "Postavka", qtyCol: "Kol.", rateCol: "Cena", amountCol: "Znesek", subtotalLabel: "Skupaj brez DDV", totalLabel: "Skupaj", notesPreviewLabel: "Opombe:", resetConfirm: "Ali ste prepričani, da želite ponastaviti obrazec?", payNow: "Plačaj zdaj" }
     },
     
-    // APP INITIALIZATION
     init() {
         this.cacheDOMElements();
         this.populateSelects();
@@ -261,12 +258,12 @@ const App = {
     },
 
     loadState() {
-        const savedState = localStorage.getItem('invoiceAppStateV3');
+        const savedState = localStorage.getItem('invoiceAppStateV4');
         this.state = savedState ? JSON.parse(savedState) : this.getDefaultState();
     },
 
     saveState() {
-        localStorage.setItem('invoiceAppStateV3', JSON.stringify(this.state));
+        localStorage.setItem('invoiceAppStateV4', JSON.stringify(this.state));
     },
 
     getDefaultState() {
@@ -280,22 +277,22 @@ const App = {
         return {
             lang: defaultLang,
             theme: 'light',
-            companyName: 'Your Company Inc.',
+            companyName: '',
             logo: null,
-            companyAddress: '123 Innovation Drive\nSan Francisco, CA 94105',
-            companyEmail: 'contact@yourcompany.com',
-            companyPhone: '(123) 456-7890',
-            clientName: 'Acme Corporation',
-            clientAddress: '456 Client Avenue\nNew York, NY 10012',
-            clientEmail: 'contact@acme.corp',
+            companyAddress: '',
+            companyEmail: '',
+            companyPhone: '',
+            clientName: '',
+            clientAddress: '',
+            clientEmail: '',
             invoiceNumber: `INV-${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`,
             currency: 'USD',
             invoiceDate: today.toISOString().split('T')[0],
             dueDate: dueDate.toISOString().split('T')[0],
-            items: [{ description: 'Premium Web Development Services', quantity: 1, rate: 5000 }],
-            discount: '0',
-            taxRate: 8,
-            notes: 'Thank you for your business. Payment is due within 30 days.',
+            items: [{ description: '', quantity: 1, rate: 0 }],
+            discount: '',
+            taxRate: '',
+            notes: '',
             paymentLink: '',
             totals: { subtotal: 0, discount: 0, tax: 0, total: 0 },
         };
@@ -345,8 +342,11 @@ const App = {
                 <td style="text-align:right;">${format(parseFloat(item.rate) || 0)}</td>
                 <td style="text-align:right;">${format((parseFloat(item.rate) || 0) * (parseFloat(item.quantity) || 0))}</td>
             </tr>`).join('');
-            
+        
         const paymentLinkHTML = paymentLink ? `<a href="${paymentLink}" target="_blank" class="preview-pay-btn">${this.getTranslation('payNow')}</a>` : '';
+        const discountHTML = totals.discount > 0 ? `<p><strong>${this.getTranslation('discountLabel').split(' ')[0]}:</strong> - ${format(totals.discount)}</p>` : '';
+        const taxHTML = totals.tax > 0 ? `<p><strong>${this.getTranslation('taxRateLabel').split(' ')[0]}:</strong> ${format(totals.tax)}</p>` : '';
+        const notesHTML = this.state.notes ? `<div style="margin-top:2rem;"><h3>${this.getTranslation('notesPreviewLabel')}</h3><p style="color:#6b7280;">${this.state.notes.replace(/\n/g, '<br>')}</p></div>` : '';
 
         this.elements.previewContainer.innerHTML = `
             <table style="width:100%; margin-bottom: 2rem;">
@@ -377,25 +377,21 @@ const App = {
                 </tr>
             </table>
             <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr><th>${this.getTranslation('itemCol')}</th><th style="text-align:center;">${this.getTranslation('qtyCol')}</th><th style="text-align:right;">${this.getTranslation('rateCol')}</th><th style="text-align:right;">${this.getTranslation('amountCol')}</th></tr>
-                </thead>
+                <thead><tr><th>${this.getTranslation('itemCol')}</th><th style="text-align:center;">${this.getTranslation('qtyCol')}</th><th style="text-align:right;">${this.getTranslation('rateCol')}</th><th style="text-align:right;">${this.getTranslation('amountCol')}</th></tr></thead>
                 <tbody>${itemsHTML}</tbody>
             </table>
             <table style="width:100%; margin-top:2rem;">
                 <tr>
-                    <td style="width:60%; vertical-align:bottom;">
-                        ${paymentLinkHTML}
-                    </td>
+                    <td style="width:60%; vertical-align:bottom;">${paymentLinkHTML}</td>
                     <td style="width:40%; text-align:right;">
                         <p><strong>${this.getTranslation('subtotalLabel')}:</strong> ${format(totals.subtotal)}</p>
-                        <p><strong>${this.getTranslation('discountLabel')}:</strong> - ${format(totals.discount)}</p>
-                        <p><strong>${this.getTranslation('taxRateLabel')}:</strong> ${format(totals.tax)}</p>
+                        ${discountHTML}
+                        ${taxHTML}
                         <h3 style="margin-top:1rem; font-size:1.2rem;"><strong>${this.getTranslation('totalLabel')}:</strong> ${format(totals.total)}</h3>
                     </td>
                 </tr>
             </table>
-             ${this.state.notes ? `<div style="margin-top:2rem;"><h3>${this.getTranslation('notesPreviewLabel')}</h3><p style="color:#6b7280;">${this.state.notes.replace(/\n/g, '<br>')}</p></div>` : ''}
+            ${notesHTML}
         `;
     },
 
@@ -449,9 +445,7 @@ const App = {
 
     updateTotals() {
         let subtotal = 0;
-        this.state.items.forEach(item => {
-            subtotal += (parseFloat(item.quantity) || 0) * (parseFloat(item.rate) || 0);
-        });
+        this.state.items.forEach(item => { subtotal += (parseFloat(item.quantity) || 0) * (parseFloat(item.rate) || 0); });
 
         let discountAmount = 0;
         const discountInput = this.state.discount;
@@ -471,7 +465,7 @@ const App = {
 
     resetForm() {
         if (confirm(this.getTranslation('resetConfirm'))) {
-            localStorage.removeItem('invoiceAppStateV3');
+            localStorage.removeItem('invoiceAppStateV4');
             this.state = this.getDefaultState();
             this.render();
         }
@@ -534,19 +528,14 @@ const App = {
         const format = (val) => this.formatCurrency(val, currency, lang);
         const margin = 15;
         const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
 
         doc.setFont('helvetica', 'normal');
-        
-        // Logo and company details
         if (this.state.logo) doc.addImage(this.state.logo, 'PNG', margin, margin, 40, 20);
         else doc.setFontSize(22).setFont('helvetica', 'bold').text('INVOICE', margin, margin + 10);
-        
         doc.setFontSize(9).setTextColor(100);
         doc.text(this.state.companyName, pageWidth - margin, margin + 10, { align: 'right' });
         doc.text(this.state.companyAddress.replace(/\n/g, '\n'), pageWidth - margin, margin + 15, { align: 'right' });
-
-        // Bill To and Invoice Details
+        
         let y = margin + 40;
         doc.setFontSize(11).setFont('helvetica', 'bold').setTextColor(0);
         doc.text(this.getTranslation('toLabel'), margin, y);
@@ -559,31 +548,29 @@ const App = {
         const detailsText = `${this.getTranslation('invoiceNumLabel')}: ${this.state.invoiceNumber}\n${this.getTranslation('invoiceDateLabel')}: ${this.state.invoiceDate}\n${this.getTranslation('dueDateLabel')}: ${this.state.dueDate}`;
         doc.text(detailsText, pageWidth / 2, y);
 
-        // Items Table
         const tableBody = this.state.items.map(item => [item.description || '', String(item.quantity || 0), format(parseFloat(item.rate) || 0), format((parseFloat(item.rate) || 0) * (parseFloat(item.quantity) || 0))]);
         doc.autoTable({
             head: [[this.getTranslation('itemCol'), this.getTranslation('qtyCol'), this.getTranslation('rateCol'), this.getTranslation('amountCol')]],
-            body: tableBody,
-            startY: y + 30, theme: 'grid',
-            headStyles: { fillColor: [22, 22, 22], textColor: 255 },
-            styles: { fontSize: 9 },
+            body: tableBody, startY: y + 30, theme: 'grid',
+            headStyles: { fillColor: [22, 22, 22], textColor: 255 }, styles: { fontSize: 9 },
             columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' }, 3: { halign: 'right' } }
         });
         
-        // Totals and Notes
         let finalY = doc.autoTable.previous.finalY + 10;
-        const totalsText = `${this.getTranslation('subtotalLabel')}: ${format(totals.subtotal)}\n${this.getTranslation('discountLabel')}: -${format(totals.discount)}\n${this.getTranslation('taxRateLabel')}: ${format(totals.tax)}\n\n${this.getTranslation('totalLabel')}: ${format(totals.total)}`;
-        doc.setFontSize(10).text(totalsText, pageWidth - margin, finalY, { align: 'right' });
+        const totalsLines = [`${this.getTranslation('subtotalLabel')}: ${format(totals.subtotal)}`];
+        if (totals.discount > 0) totalsLines.push(`${this.getTranslation('discountLabel').split(' ')[0]}: -${format(totals.discount)}`);
+        if (totals.tax > 0) totalsLines.push(`${this.getTranslation('taxRateLabel').split(' ')[0]}: ${format(totals.tax)}`);
+        totalsLines.push(`\n${this.getTranslation('totalLabel')}: ${format(totals.total)}`);
+        doc.setFontSize(10).text(totalsLines.join('\n'), pageWidth - margin, finalY, { align: 'right' });
 
         if(this.state.paymentLink) {
-            doc.setFontSize(10).setFont('helvetica', 'bold').text(this.getTranslation('payNow'), margin, finalY + 10, { url: this.state.paymentLink });
-            doc.setDrawColor(0,0,255).setLineWidth(0.2).line(margin, finalY + 10.5, margin + doc.getTextWidth(this.getTranslation('payNow')), finalY + 10.5);
+            doc.setFontSize(10).setFont('helvetica', 'bold').textWithLink(this.getTranslation('payNow'), margin, finalY + 10, { url: this.state.paymentLink });
         }
         
-        doc.setDrawColor(0); // Reset draw color
         if (this.state.notes) {
-            doc.setFontSize(9).setFont('helvetica', 'bold').text(this.getTranslation('notesPreviewLabel'), margin, finalY + 20);
-            doc.setFont('helvetica', 'normal').text(this.state.notes, margin, finalY + 25, { maxWidth: pageWidth / 2 - margin });
+            let notesY = this.state.paymentLink ? finalY + 20 : finalY;
+            doc.setFontSize(9).setFont('helvetica', 'bold').text(this.getTranslation('notesPreviewLabel'), margin, notesY);
+            doc.setFont('helvetica', 'normal').text(this.state.notes, margin, notesY + 5, { maxWidth: pageWidth / 2 - margin });
         }
         
         doc.save(`Invoice_${this.state.invoiceNumber}.pdf`);
@@ -591,7 +578,7 @@ const App = {
 
     generateDOCX() {
         if (!this.validateForm() || typeof docx === 'undefined') return;
-        const { Document, Packer, Paragraph, TextRun, Table, TableCell, TableRow, WidthType, AlignmentType, ExternalHyperlink } = docx;
+        const { Document, Packer, Paragraph, TextRun, Table, TableCell, TableRow, WidthType, AlignmentType, ExternalHyperlink, ShadingType, convertInchesToTwip } = docx;
         
         const { lang, currency, totals } = this.state;
         const format = (val) => this.formatCurrency(val, currency, lang);
@@ -600,7 +587,6 @@ const App = {
         const bold = (txt) => new TextRun({ text: String(txt), bold: true });
 
         const itemsData = [
-            [bold(this.getTranslation('itemCol')), bold(this.getTranslation('qtyCol')), bold(this.getTranslation('rateCol')), bold(this.getTranslation('amountCol'))],
             ...this.state.items.map(item => [text(item.description), text(item.quantity), text(format(item.rate)), text(format(item.quantity * item.rate))])
         ];
 
@@ -610,17 +596,28 @@ const App = {
             new Paragraph({ children: [bold(this.getTranslation('toLabel')), text(`: ${this.state.clientName}`)] }),
             new Paragraph({ children: [bold(this.getTranslation('invoiceNumLabel')), text(`: ${this.state.invoiceNumber}`)] }),
             new Paragraph({ text: "\n" }),
-            new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: itemsData.map(rowData => new TableRow({ children: rowData.map(cellData => new TableCell({ children: [new Paragraph({ children: [cellData] })] })) })) }),
+            new Table({
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                rows: [
+                    new TableRow({ children: [new TableCell({ children: [new Paragraph({ children: [bold(this.getTranslation('itemCol'))]})]}), new TableCell({ children: [new Paragraph({ children: [bold(this.getTranslation('qtyCol'))]})]}), new TableCell({ children: [new Paragraph({ children: [bold(this.getTranslation('rateCol'))]})]}), new TableCell({ children: [new Paragraph({ children: [bold(this.getTranslation('amountCol'))]})]})] }),
+                    ...itemsData.map(rowData => new TableRow({ children: rowData.map(cellData => new TableCell({ children: [new Paragraph({ children: [cellData] })] })) }))
+                ]
+            }),
             new Paragraph({ text: "\n" }),
             new Paragraph({ children: [text(`${this.getTranslation('subtotalLabel')}: ${format(totals.subtotal)}`)], alignment: AlignmentType.RIGHT }),
-            new Paragraph({ children: [text(`${this.getTranslation('discountLabel')}: -${format(totals.discount)}`)], alignment: AlignmentType.RIGHT }),
-            new Paragraph({ children: [text(`${this.getTranslation('taxRateLabel')}: ${format(totals.tax)}`)], alignment: AlignmentType.RIGHT }),
-            new Paragraph({ children: [bold(`${this.getTranslation('totalLabel')}: ${format(totals.total)}`)], alignment: AlignmentType.RIGHT }),
         ];
+        if (totals.discount > 0) children.push(new Paragraph({ children: [text(`${this.getTranslation('discountLabel').split(' ')[0]}: -${format(totals.discount)}`)], alignment: AlignmentType.RIGHT }));
+        if (totals.tax > 0) children.push(new Paragraph({ children: [text(`${this.getTranslation('taxRateLabel').split(' ')[0]}: ${format(totals.tax)}`)], alignment: AlignmentType.RIGHT }));
+        children.push(new Paragraph({ children: [bold(`${this.getTranslation('totalLabel')}: ${format(totals.total)}`)], alignment: AlignmentType.RIGHT }));
 
-        if(this.state.paymentLink){
+        if(this.state.paymentLink) {
             children.push(new Paragraph({text: "\n"}));
             children.push(new Paragraph({ children: [ new ExternalHyperlink({ children: [ new TextRun({ text: this.getTranslation('payNow'), style: "Hyperlink" }) ], link: this.state.paymentLink }) ]}));
+        }
+        if(this.state.notes){
+            children.push(new Paragraph({text: "\n"}));
+            children.push(new Paragraph({ children: [bold(this.getTranslation('notesPreviewLabel'))]}));
+            children.push(new Paragraph({ children: [text(this.state.notes)]}));
         }
 
         const doc = new Document({ sections: [{ children }] });
