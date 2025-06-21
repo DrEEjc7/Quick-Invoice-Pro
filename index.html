@@ -16,56 +16,68 @@
     
     <style>
         :root {
-            --bg-primary: #ffffff; --bg-secondary: #f7f9fc; --bg-panel: #ffffff;
-            --text-primary: #202124; --text-secondary: #5f6368;
-            --border-color: #e0e2e6; --shadow-color: rgba(0, 0, 0, 0.08);
-            --accent-color: #1a73e8; --accent-hover: #1557b0; --accent-light: rgba(26, 115, 232, 0.1);
-            --danger-color: #d93025;
+            --bg-primary: #ffffff; --bg-secondary: #f9fafb; --bg-panel: #ffffff;
+            --text-primary: #111827; --text-secondary: #6b7280;
+            --border-color: #e5e7eb; --shadow-color: rgba(0, 0, 0, 0.05);
+            --accent-color: #0c0a09; --accent-hover: #404040; --accent-light: rgba(12, 10, 9, 0.1);
+            --danger-color: #dc2626;
         }
         [data-theme="dark"] {
-            --bg-primary: #202124; --bg-secondary: #292a2d; --bg-panel: #303134;
-            --text-primary: #e8eaed; --text-secondary: #9aa0a6;
-            --border-color: #44474a; --shadow-color: rgba(0, 0, 0, 0.3);
-            --accent-color: #8ab4f8; --accent-hover: #aecbfa; --accent-light: rgba(138, 180, 248, 0.15);
+            --bg-primary: #111827; --bg-secondary: #1f2937; --bg-panel: #111827;
+            --text-primary: #f9fafb; --text-secondary: #9ca3af;
+            --border-color: #374151; --shadow-color: rgba(0, 0, 0, 0.2);
+            --accent-color: #f9fafb; --accent-hover: #d1d5db; --accent-light: rgba(249, 250, 251, 0.1);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { font-size: 14px; }
+        html { font-size: 14px; scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
             transition: background 0.3s ease, color 0.3s ease;
         }
+        
+        /* HEADER ACTION BAR */
+        .action-bar {
+            position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center;
+            height: 60px; padding: 0 2rem; background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 10px var(--shadow-color); z-index: 100;
+        }
+        .action-group { display: flex; align-items: center; gap: 1rem; }
+        .btn {
+            border: none; border-radius: 6px; padding: 0.6rem 1rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: all 0.2s ease;
+        }
+        .btn-main { background: var(--accent-color); color: var(--bg-primary); }
+        .btn-main:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { border-color: var(--text-primary); }
+        .btn-icon { background: none; padding: 0.5rem; font-size: 1.2rem; border: none; color: var(--text-secondary); }
+        .btn-icon:hover { color: var(--text-primary); }
+
         .app-container {
             display: grid;
-            grid-template-columns: 1fr 1.1fr; /* Form panel slightly smaller */
-            height: calc(100vh - 60px); /* Full height minus action bar */
+            grid-template-columns: 1fr 1.1fr;
+            height: calc(100vh - 60px);
         }
         .panel { overflow-y: auto; }
-        .panel-form {
-            padding: 2rem;
-            background: var(--bg-panel);
-            border-right: 1px solid var(--border-color);
+        .panel-form { padding: 2.5rem; background: var(--bg-panel); border-right: 1px solid var(--border-color); }
+        .panel-preview { padding: 2.5rem; }
+
+        /* FORM STYLING */
+        .form-block { margin-bottom: 3rem; }
+        .form-block-title {
+            font-size: 1.2rem; font-weight: 600; padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);
         }
-        .panel-preview { padding: 2rem; }
-        .app-header { text-align: center; margin-bottom: 2rem; }
-        .app-header h1 { font-size: 1.8rem; font-weight: 700; }
-        .app-header p { color: var(--text-secondary); }
-
-        /* Accordion */
-        details { border-bottom: 1px solid var(--border-color); padding: 1rem 0; }
-        details summary { font-weight: 600; font-size: 1.1rem; cursor: pointer; list-style: none; padding: 0.5rem; border-radius: 4px; }
-        details summary::-webkit-details-marker { display: none; }
-        details summary:hover { background: var(--bg-secondary); }
-        details[open] summary { color: var(--accent-color); }
-        .form-section { display: grid; grid-template-columns: 1fr; gap: 1rem; padding: 1rem 0.5rem; }
-
-        /* Form Elements */
-        .form-group { display: flex; flex-direction: column; }
-        label { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
+        .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+        .form-group:last-child { margin-bottom: 0; }
+        
+        label { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
         input, textarea, select {
-            width: 100%; padding: 0.7rem; border: 1px solid var(--border-color); border-radius: 5px;
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px;
             background: var(--bg-primary); color: var(--text-primary); font-family: inherit;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -73,140 +85,51 @@
             outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--accent-light);
         }
         input.invalid { border-color: var(--danger-color); }
-        textarea { resize: vertical; min-height: 60px; }
+        textarea { resize: vertical; min-height: 80px; }
 
-        /* Items */
+        /* Items Section */
+        #items-header { display: grid; grid-template-columns: 4fr 1fr 1.5fr auto; gap: 0.5rem; margin-bottom: 0.5rem; padding: 0 0.5rem;}
+        #items-header label { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary);}
         .item-row { display: grid; grid-template-columns: 4fr 1fr 1.5fr auto; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;}
         .item-row input { padding: 0.5rem; }
-        .btn-add-item { background: none; border: 1px dashed var(--border-color); color: var(--text-secondary); width: 100%; padding: 0.8rem; border-radius: 5px; cursor: pointer; font-weight: 500;}
+        .btn-add-item { background: none; border: 1px dashed var(--border-color); color: var(--text-secondary); width: 100%; padding: 0.8rem; margin-top: 1rem; border-radius: 6px; cursor: pointer; font-weight: 500;}
         .btn-add-item:hover { background: var(--bg-secondary); color: var(--accent-color); border-color: var(--accent-color); }
         .btn-remove-item { background: none; border: none; font-size: 1rem; color: var(--text-secondary); cursor: pointer; }
         .btn-remove-item:hover { color: var(--danger-color); }
 
         /* Preview Panel */
         .preview-content {
-            background: var(--bg-primary);
-            padding: 2rem;
-            border-radius: 5px;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            max-width: 800px; margin: 0 auto;
-            color: #222; /* Preview content should always be dark text on light bg */
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 16px var(--shadow-color);
+            max-width: 820px; margin: 0 auto;
+            color: #111827; /* Preview is always black on white for print fidelity */
         }
-        #invoice-preview-container { font-size: 12px; line-height: 1.6; }
-        #invoice-preview-container h1 { font-size: 2.5rem; font-weight: 300; letter-spacing: -1px; }
-        #invoice-preview-container h3 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 0.5rem; }
-        #invoice-preview-container th { background-color: #f2f2f2; font-size: 0.75rem; text-transform: uppercase; padding: 0.8rem; text-align: left;}
-        #invoice-preview-container td { padding: 0.8rem; border-bottom: 1px solid #eee; }
-        
-        /* Action Bar */
-        .action-bar {
-            position: sticky; bottom: 0; display: flex; justify-content: space-between; align-items: center;
-            height: 60px; padding: 0 2rem; background: var(--bg-panel);
-            border-top: 1px solid var(--border-color); box-shadow: 0 -2px 10px var(--shadow-color); z-index: 100;
-        }
-        .action-group { display: flex; align-items: center; gap: 1rem; }
-        .btn {
-            border: none; border-radius: 5px; padding: 0.6rem 1rem; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: all 0.2s ease;
-        }
-        .btn-main { background: var(--accent-color); color: white; }
-        .btn-main:hover { background: var(--accent-hover); }
-        .btn-secondary { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { border-color: var(--text-primary); }
-        .btn-icon { background: none; padding: 0.5rem; font-size: 1.2rem; border: none; color: var(--text-secondary); }
-        .btn-icon:hover { color: var(--text-primary); }
+        #invoice-preview-container { font-size: 13px; line-height: 1.6; }
+        #invoice-preview-container h1 { font-size: 2.8rem; font-weight: 300; letter-spacing: -1.5px; }
+        #invoice-preview-container h3 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; margin-bottom: 0.5rem; }
+        #invoice-preview-container th { background-color: #f3f4f6; font-size: 0.8rem; text-transform: uppercase; padding: 0.8rem; text-align: left; font-weight: 600; border-bottom: 2px solid #e5e7eb;}
+        #invoice-preview-container td { padding: 1rem 0.8rem; border-bottom: 1px solid #e5e7eb; }
+        .preview-pay-btn { display: inline-block; background-color: #111827; color: #ffffff; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 1rem; }
+        .preview-pay-btn:hover { background-color: #4b5563; }
+
+        /* Footer */
+        .app-footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem; }
+        .app-footer a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+        .app-footer a:hover { color: var(--accent-color); text-decoration: underline; }
 
         /* Responsive */
         @media (max-width: 1024px) {
             .app-container { grid-template-columns: 1fr; }
-            .panel-preview { position: fixed; top: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: none; }
-            .panel-preview.visible { display: block; }
-            .preview-content { height: 90%; overflow-y: auto; margin-top: 5%; }
-            /* Add a 'Show Preview' button in the action bar for mobile */
+            .panel-preview { display: none; }
             .btn-show-preview { display: inline-block !important; }
-        }
-        @media print {
-            body * { display: none !important; }
-            #invoice-preview-container, #invoice-preview-container * { display: block !important; }
-            #invoice-preview-container { position: absolute; left: 0; top: 0; }
         }
     </style>
 </head>
 <body>
-
-  <div class="app-container">
-
-    <!-- ==== LEFT PANEL: FORM ==== -->
-    <div class="panel panel-form">
-      <header class="app-header">
-        <h1 data-translate-key="headerTitle">Invoice Generator</h1>
-        <p data-translate-key="headerSubtitle">Create and download professional invoices</p>
-      </header>
-
-      <div class="form-accordion">
-        <details open>
-          <summary data-translate-key="companySectionTitle">Your Company Details</summary>
-          <div class="form-section">
-            <div class="form-group"><label for="companyName" data-translate-key="companyNameLabel">Company Name *</label><input type="text" id="companyName" required></div>
-            <div class="form-group"><label for="logoUpload" data-translate-key="logoLabel">Company Logo</label><input type="file" id="logoUpload" accept="image/*"></div>
-            <div class="form-group"><label for="companyAddress" data-translate-key="addressLabel">Address</label><textarea id="companyAddress" rows="2"></textarea></div>
-            <div class="form-group"><label for="companyEmail" data-translate-key="emailLabel">Email</label><input type="email" id="companyEmail"></div>
-            <div class="form-group"><label for="companyPhone" data-translate-key="phoneLabel">Phone</label><input type="tel" id="companyPhone"></div>
-          </div>
-        </details>
-
-        <details>
-          <summary data-translate-key="clientSectionTitle">Client Details</summary>
-          <div class="form-section">
-             <div class="form-group"><label for="clientName" data-translate-key="clientNameLabel">Client Name *</label><input type="text" id="clientName" required></div>
-             <div class="form-group"><label for="clientAddress" data-translate-key="addressLabel">Address</label><textarea id="clientAddress" rows="2"></textarea></div>
-             <div class="form-group"><label for="clientEmail" data-translate-key="emailLabel">Email</label><input type="email" id="clientEmail"></div>
-          </div>
-        </details>
-        
-        <details open>
-            <summary data-translate-key="invoiceSectionTitle">Invoice Details</summary>
-            <div class="form-section">
-                <div class="form-group"><label for="invoiceNumber" data-translate-key="invoiceNumLabel">Invoice Number *</label><input type="text" id="invoiceNumber" required></div>
-                <div class="form-group"><label for="currency" data-translate-key="currencyLabel">Currency</label><select id="currency"></select></div>
-                <div class="form-group"><label for="invoiceDate" data-translate-key="invoiceDateLabel">Invoice Date</label><input type="date" id="invoiceDate"></div>
-                <div class="form-group"><label for="dueDate" data-translate-key="dueDateLabel">Due Date</label><input type="date" id="dueDate"></div>
-            </div>
-        </details>
-
-        <details open>
-            <summary data-translate-key="itemsSectionTitle">Invoice Items</summary>
-            <div class="form-section" id="items-section">
-                 <div id="items-container"></div>
-                <button type="button" class="btn-add-item" id="addItemBtn" data-translate-key="addItem">+ Add Item</button>
-            </div>
-        </details>
-        
-        <details>
-            <summary data-translate-key="totalsSectionTitle">Totals & Notes</summary>
-            <div class="form-section">
-                <div class="form-group"><label for="discount" data-translate-key="discountLabel">Discount (e.g., 50 or 10%)</label><input type="text" id="discount"></div>
-                <div class="form-group"><label for="taxRate" data-translate-key="taxRateLabel">Tax Rate (%)</label><input type="number" id="taxRate" step="0.01"></div>
-                <div class="form-group"><label for="notes" data-translate-key="notesLabel">Notes</label><textarea id="notes" rows="3"></textarea></div>
-            </div>
-        </details>
-
-      </div>
-    </div>
-
-    <!-- ==== RIGHT PANEL: PREVIEW ==== -->
-    <div class="panel panel-preview" id="panel-preview">
-        <div class="preview-content">
-            <div id="invoice-preview-container">
-                <!-- Live preview is rendered here by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-  </div>
   
-  <!-- ==== STICKY ACTION BAR ==== -->
-  <div class="action-bar">
+  <header class="action-bar">
       <div class="action-group">
           <button class="btn btn-main" id="generatePDFBtn" data-translate-key="downloadPDF">Download PDF</button>
           <button class="btn btn-secondary" id="generateDOCXBtn" data-translate-key="downloadDOCX">Download DOCX</button>
@@ -217,8 +140,79 @@
           <button class="btn btn-icon" id="resetBtn" title="Reset Form">🔄</button>
           <button class="btn btn-icon" id="themeToggle" title="Toggle Theme">🌙</button>
       </div>
-  </div>
+  </header>
 
+  <main class="app-container">
+
+    <!-- ==== LEFT PANEL: FORM ==== -->
+    <div class="panel panel-form">
+      <div class="form-container">
+        <div class="form-block">
+            <h2 class="form-block-title" data-translate-key="companySectionTitle">Your Company Details</h2>
+            <div class="grid-2-col">
+                <div class="form-group"><label for="companyName" data-translate-key="companyNameLabel">Company Name *</label><input type="text" id="companyName" required></div>
+                <div class="form-group"><label for="logoUpload" data-translate-key="logoLabel">Company Logo</label><input type="file" id="logoUpload" accept="image/*"></div>
+            </div>
+            <div class="form-group"><label for="companyAddress" data-translate-key="addressLabel">Address</label><textarea id="companyAddress" rows="2"></textarea></div>
+            <div class="grid-2-col">
+                <div class="form-group"><label for="companyEmail" data-translate-key="emailLabel">Email</label><input type="email" id="companyEmail"></div>
+                <div class="form-group"><label for="companyPhone" data-translate-key="phoneLabel">Phone</label><input type="tel" id="companyPhone"></div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <h2 class="form-block-title" data-translate-key="clientSectionTitle">Client Details</h2>
+            <div class="form-group"><label for="clientName" data-translate-key="clientNameLabel">Client Name *</label><input type="text" id="clientName" required></div>
+            <div class="form-group"><label for="clientAddress" data-translate-key="addressLabel">Address</label><textarea id="clientAddress" rows="2"></textarea></div>
+            <div class="form-group"><label for="clientEmail" data-translate-key="emailLabel">Email</label><input type="email" id="clientEmail"></div>
+        </div>
+        
+        <div class="form-block">
+            <h2 class="form-block-title" data-translate-key="invoiceSectionTitle">Invoice Details</h2>
+            <div class="grid-2-col">
+                <div class="form-group"><label for="invoiceNumber" data-translate-key="invoiceNumLabel">Invoice Number *</label><input type="text" id="invoiceNumber" required></div>
+                <div class="form-group"><label for="currency" data-translate-key="currencyLabel">Currency</label><select id="currency"></select></div>
+                <div class="form-group"><label for="invoiceDate" data-translate-key="invoiceDateLabel">Invoice Date</label><input type="date" id="invoiceDate"></div>
+                <div class="form-group"><label for="dueDate" data-translate-key="dueDateLabel">Due Date</label><input type="date" id="dueDate"></div>
+            </div>
+        </div>
+
+        <div class="form-block">
+            <h2 class="form-block-title" data-translate-key="itemsSectionTitle">Invoice Items</h2>
+            <div id="items-header">
+                <label data-translate-key="itemDescLabel">Description</label>
+                <label data-translate-key="itemQtyLabel">Qty</label>
+                <label data-translate-key="itemRateLabel">Rate</label>
+            </div>
+            <div id="items-container"></div>
+            <button type="button" class="btn-add-item" id="addItemBtn" data-translate-key="addItem">+ Add Item</button>
+        </div>
+        
+        <div class="form-block">
+            <h2 class="form-block-title" data-translate-key="totalsSectionTitle">Totals & Notes</h2>
+            <div class="grid-2-col">
+                <div class="form-group"><label for="discount" data-translate-key="discountLabel">Discount (e.g., 50 or 10%)</label><input type="text" id="discount"></div>
+                <div class="form-group"><label for="taxRate" data-translate-key="taxRateLabel">Tax Rate (%)</label><input type="number" id="taxRate" step="0.01"></div>
+            </div>
+            <div class="form-group"><label for="paymentLink" data-translate-key="paymentLinkLabel">Payment Link (Optional)</label><input type="url" id="paymentLink" placeholder="https://"></div>
+            <div class="form-group"><label for="notes" data-translate-key="notesLabel">Notes</label><textarea id="notes" rows="3"></textarea></div>
+        </div>
+      </div>
+      <footer class="app-footer">
+          Copyright © <span id="copyrightYear"></span> • Designed with ❤️ by <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a>
+      </footer>
+    </div>
+
+    <!-- ==== RIGHT PANEL: PREVIEW ==== -->
+    <div class="panel panel-preview" id="panel-preview">
+        <div class="preview-content">
+            <div id="invoice-preview-container">
+                <!-- Live preview is rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+  </main>
+  
 <script>
 const App = {
     // SINGLE SOURCE OF TRUTH FOR ALL APP DATA
@@ -229,14 +223,15 @@ const App = {
 
     // TRANSLATIONS DICTIONARY
     translations: {
-        en: { pageTitle: "Professional Invoice Generator", headerTitle: "Invoice Generator", headerSubtitle: "Create and download professional invoices", companySectionTitle: "Your Company Details", companyNameLabel: "Company Name *", logoLabel: "Company Logo", addressLabel: "Address", emailLabel: "Email", phoneLabel: "Phone", clientSectionTitle: "Client Details", clientNameLabel: "Client Name *", invoiceSectionTitle: "Invoice Details", invoiceNumLabel: "Invoice Number *", currencyLabel: "Currency", invoiceDateLabel: "Invoice Date", dueDateLabel: "Due Date", itemsSectionTitle: "Invoice Items", itemDescLabel: "Description", itemQtyLabel: "Qty", itemRateLabel: "Rate", addItem: "+ Add Item", totalsSectionTitle: "Totals & Notes", discountLabel: "Discount (e.g., 50 or 10%)", taxRateLabel: "Tax Rate (%)", notesLabel: "Notes", downloadPDF: "Download PDF", downloadDOCX: "Download DOCX", fromLabel: "From", toLabel: "Bill To", detailsLabel: "Details", itemCol: "Item", qtyCol: "Qty", rateCol: "Rate", amountCol: "Amount", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Are you sure you want to reset the form? All data will be cleared." },
-        es: { pageTitle: "Generador de Facturas Profesional", headerTitle: "Generador de Facturas", headerSubtitle: "Crea y descarga facturas profesionales", companySectionTitle: "Datos de tu Empresa", companyNameLabel: "Nombre de la Empresa *", logoLabel: "Logo de la Empresa", addressLabel: "Dirección", emailLabel: "Correo Electrónico", phoneLabel: "Teléfono", clientSectionTitle: "Datos del Cliente", clientNameLabel: "Nombre del Cliente *", invoiceSectionTitle: "Detalles de la Factura", invoiceNumLabel: "Número de Factura *", currencyLabel: "Moneda", invoiceDateLabel: "Fecha de Factura", dueDateLabel: "Fecha de Vencimiento", itemsSectionTitle: "Artículos de la Factura", itemDescLabel: "Descripción", itemQtyLabel: "Cant.", itemRateLabel: "Precio", addItem: "+ Añadir Artículo", totalsSectionTitle: "Totales y Notas", discountLabel: "Descuento (ej. 50 o 10%)", taxRateLabel: "Tasa de Impuestos (%)", notesLabel: "Notas", downloadPDF: "Descargar PDF", downloadDOCX: "Descargar DOCX", fromLabel: "De", toLabel: "Facturar a", detailsLabel: "Detalles", itemCol: "Artículo", qtyCol: "Cant.", rateCol: "Precio", amountCol: "Importe", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "¿Estás seguro de que quieres reiniciar el formulario? Todos los datos se perderán." },
-        it: { pageTitle: "Generatore di Fatture Professionale", headerTitle: "Generatore di Fatture", headerSubtitle: "Crea e scarica fatture professionali", companySectionTitle: "Dati della tua Azienda", companyNameLabel: "Nome Azienda *", logoLabel: "Logo Azienda", addressLabel: "Indirizzo", emailLabel: "Email", phoneLabel: "Telefono", clientSectionTitle: "Dati del Cliente", clientNameLabel: "Nome Cliente *", invoiceSectionTitle: "Dettagli Fattura", invoiceNumLabel: "Numero Fattura *", currencyLabel: "Valuta", invoiceDateLabel: "Data Fattura", dueDateLabel: "Data di Scadenza", itemsSectionTitle: "Voci in Fattura", itemDescLabel: "Descrizione", itemQtyLabel: "Qtà", itemRateLabel: "Prezzo", addItem: "+ Aggiungi Voce", totalsSectionTitle: "Totali e Note", discountLabel: "Sconto (es. 50 o 10%)", taxRateLabel: "Aliquota IVA (%)", notesLabel: "Note", downloadPDF: "Scarica PDF", downloadDOCX: "Scarica DOCX", fromLabel: "Da", toLabel: "Fatturare a", detailsLabel: "Dettagli", itemCol: "Voce", qtyCol: "Qtà", rateCol: "Prezzo", amountCol: "Importo", subtotalLabel: "Subtotale", totalLabel: "Totale", notesPreviewLabel: "Note:", resetConfirm: "Sei sicuro di voler reimpostare il modulo? Tutti i dati verranno cancellati." },
-        pt: { pageTitle: "Gerador de Faturas Profissional", headerTitle: "Gerador de Faturas", headerSubtitle: "Crie e baixe faturas profissionais", companySectionTitle: "Detalhes da sua Empresa", companyNameLabel: "Nome da Empresa *", logoLabel: "Logotipo da Empresa", addressLabel: "Endereço", emailLabel: "Email", phoneLabel: "Telefone", clientSectionTitle: "Detalhes do Cliente", clientNameLabel: "Nome do Cliente *", invoiceSectionTitle: "Detalhes da Fatura", invoiceNumLabel: "Número da Fatura *", currencyLabel: "Moeda", invoiceDateLabel: "Data da Fatura", dueDateLabel: "Data de Vencimento", itemsSectionTitle: "Itens da Fatura", itemDescLabel: "Descrição", itemQtyLabel: "Qtd", itemRateLabel: "Taxa", addItem: "+ Adicionar Item", totalsSectionTitle: "Totais e Notas", discountLabel: "Desconto (ex: 50 ou 10%)", taxRateLabel: "Taxa de Imposto (%)", notesLabel: "Notas", downloadPDF: "Baixar PDF", downloadDOCX: "Baixar DOCX", fromLabel: "De", toLabel: "Faturar Para", detailsLabel: "Detalhes", itemCol: "Item", qtyCol: "Qtd", rateCol: "Taxa", amountCol: "Valor", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "Tem certeza de que deseja redefinir o formulário? Todos os dados serão apagados." },
-        fr: { pageTitle: "Générateur de Factures Professionnel", headerTitle: "Générateur de Factures", headerSubtitle: "Créez et téléchargez des factures professionnelles", companySectionTitle: "Détails de votre Entreprise", companyNameLabel: "Nom de l'entreprise *", logoLabel: "Logo de l'entreprise", addressLabel: "Adresse", emailLabel: "E-mail", phoneLabel: "Téléphone", clientSectionTitle: "Détails du Client", clientNameLabel: "Nom du client *", invoiceSectionTitle: "Détails de la Facture", invoiceNumLabel: "Numéro de facture *", currencyLabel: "Devise", invoiceDateLabel: "Date de la facture", dueDateLabel: "Date d'échéance", itemsSectionTitle: "Éléments de la Facture", itemDescLabel: "Description", itemQtyLabel: "Qté", itemRateLabel: "Taux", addItem: "+ Ajouter un élément", totalsSectionTitle: "Totaux et Notes", discountLabel: "Remise (ex: 50 ou 10%)", taxRateLabel: "Taux de taxe (%)", notesLabel: "Notes", downloadPDF: "Télécharger PDF", downloadDOCX: "Télécharger DOCX", fromLabel: "De", toLabel: "Facturer à", detailsLabel: "Détails", itemCol: "Élément", qtyCol: "Qté", rateCol: "Taux", amountCol: "Montant", subtotalLabel: "Sous-total", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Êtes-vous sûr de vouloir réinitialiser le formulaire? Toutes les données seront effacées." },
-        de: { pageTitle: "Professioneller Rechnungsgenerator", headerTitle: "Rechnungsgenerator", headerSubtitle: "Erstellen und herunterladen Sie professionelle Rechnungen", companySectionTitle: "Ihre Firmendetails", companyNameLabel: "Firmenname *", logoLabel: "Firmenlogo", addressLabel: "Adresse", emailLabel: "Email", phoneLabel: "Telefon", clientSectionTitle: "Kundendetails", clientNameLabel: "Kundenname *", invoiceSectionTitle: "Rechnungsdetails", invoiceNumLabel: "Rechnungsnummer *", currencyLabel: "Währung", invoiceDateLabel: "Rechnungsdatum", dueDateLabel: "Fälligkeitsdatum", itemsSectionTitle: "Rechnungsposten", itemDescLabel: "Beschreibung", itemQtyLabel: "Menge", itemRateLabel: "Satz", addItem: "+ Posten hinzufügen", totalsSectionTitle: "Summen & Notizen", discountLabel: "Rabatt (z.B. 50 oder 10%)", taxRateLabel: "Steuersatz (%)", notesLabel: "Notizen", downloadPDF: "PDF herunterladen", downloadDOCX: "DOCX herunterladen", fromLabel: "Von", toLabel: "Rechnung an", detailsLabel: "Details", itemCol: "Posten", qtyCol: "Menge", rateCol: "Satz", amountCol: "Betrag", subtotalLabel: "Zwischensumme", totalLabel: "Gesamt", notesPreviewLabel: "Notizen:", resetConfirm: "Sind Sie sicher, dass Sie das Formular zurücksetzen möchten? Alle Daten gehen verloren." },
-        ru: { pageTitle: "Профессиональный Генератор Счетов", headerTitle: "Генератор Счетов", headerSubtitle: "Создавайте и скачивайте профессиональные счета", companySectionTitle: "Данные вашей компании", companyNameLabel: "Название компании *", logoLabel: "Логотип компании", addressLabel: "Адрес", emailLabel: "Эл. почта", phoneLabel: "Телефон", clientSectionTitle: "Данные клиента", clientNameLabel: "Имя клиента *", invoiceSectionTitle: "Детали счета", invoiceNumLabel: "Номер счета *", currencyLabel: "Валюта", invoiceDateLabel: "Дата счета", dueDateLabel: "Срок оплаты", itemsSectionTitle: "Позиции счета", itemDescLabel: "Описание", itemQtyLabel: "Кол-во", itemRateLabel: "Ставка", addItem: "+ Добавить позицию", totalsSectionTitle: "Итоги и примечания", discountLabel: "Скидка (напр. 50 или 10%)", taxRateLabel: "Налоговая ставка (%)", notesLabel: "Примечания", downloadPDF: "Скачать PDF", downloadDOCX: "Скачать DOCX", fromLabel: "От", toLabel: "Счет для", detailsLabel: "Детали", itemCol: "Позиция", qtyCol: "Кол-во", rateCol: "Ставка", amountCol: "Сумма", subtotalLabel: "Подытог", totalLabel: "Итог", notesPreviewLabel: "Примечания:", resetConfirm: "Вы уверены, что хотите сбросить форму? Все данные будут удалены." },
-        sl: { pageTitle: "Profesionalni Generator Računov", headerTitle: "Generator Računov", headerSubtitle: "Ustvarite in prenesite profesionalne račune", companySectionTitle: "Podatki o vašem podjetju", companyNameLabel: "Ime podjetja *", logoLabel: "Logotip podjetja", addressLabel: "Naslov", emailLabel: "E-pošta", phoneLabel: "Telefon", clientSectionTitle: "Podatki o stranki", clientNameLabel: "Ime stranke *", invoiceSectionTitle: "Podrobnosti računa", invoiceNumLabel: "Številka računa *", currencyLabel: "Valuta", invoiceDateLabel: "Datum računa", dueDateLabel: "Rok plačila", itemsSectionTitle: "Postavke računa", itemDescLabel: "Opis", itemQtyLabel: "Količina", itemRateLabel: "Cena", addItem: "+ Dodaj postavko", totalsSectionTitle: "Vsote in opombe", discountLabel: "Popust (npr. 50 ali 10%)", taxRateLabel: "Davčna stopnja (%)", notesLabel: "Opombe", downloadPDF: "Prenesi PDF", downloadDOCX: "Prenesi DOCX", fromLabel: "Od", toLabel: "Račun za", detailsLabel: "Podrobnosti", itemCol: "Postavka", qtyCol: "Kol.", rateCol: "Cena", amountCol: "Znesek", subtotalLabel: "Skupaj brez DDV", totalLabel: "Skupaj", notesPreviewLabel: "Opombe:", resetConfirm: "Ali ste prepričani, da želite ponastaviti obrazec? Vsi podatki bodo izbrisani." },
+        en: { pageTitle: "Professional Invoice Generator", companySectionTitle: "Your Company", companyNameLabel: "Company Name *", logoLabel: "Company Logo", addressLabel: "Address", emailLabel: "Email", phoneLabel: "Phone", clientSectionTitle: "Client", clientNameLabel: "Client Name *", invoiceSectionTitle: "Invoice", invoiceNumLabel: "Invoice Number *", currencyLabel: "Currency", invoiceDateLabel: "Date", dueDateLabel: "Due Date", itemsSectionTitle: "Invoice Items", itemDescLabel: "Description", itemQtyLabel: "Qty", itemRateLabel: "Rate", addItem: "+ Add Item", totalsSectionTitle: "Payment", discountLabel: "Discount (e.g., 50 or 10%)", taxRateLabel: "Tax Rate (%)", notesLabel: "Notes", paymentLinkLabel: "Payment Link (Optional)", downloadPDF: "Download PDF", downloadDOCX: "Download DOCX", fromLabel: "From", toLabel: "Bill To", detailsLabel: "Details", itemCol: "Item", qtyCol: "Qty", rateCol: "Rate", amountCol: "Amount", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Are you sure you want to reset the form? All data will be cleared.", payNow: "Pay Now" },
+        es: { pageTitle: "Generador de Facturas Profesional", companySectionTitle: "Tu Empresa", companyNameLabel: "Nombre de la Empresa *", logoLabel: "Logo", addressLabel: "Dirección", emailLabel: "Correo", phoneLabel: "Teléfono", clientSectionTitle: "Cliente", clientNameLabel: "Nombre del Cliente *", invoiceSectionTitle: "Factura", invoiceNumLabel: "Nº de Factura *", currencyLabel: "Moneda", invoiceDateLabel: "Fecha", dueDateLabel: "Vencimiento", itemsSectionTitle: "Artículos", itemDescLabel: "Descripción", itemQtyLabel: "Cant.", itemRateLabel: "Precio", addItem: "+ Añadir Artículo", totalsSectionTitle: "Pago", discountLabel: "Descuento (ej. 50 o 10%)", taxRateLabel: "Impuestos (%)", notesLabel: "Notas", paymentLinkLabel: "Enlace de Pago (Opcional)", downloadPDF: "Descargar PDF", downloadDOCX: "Descargar DOCX", fromLabel: "De", toLabel: "Facturar a", detailsLabel: "Detalles", itemCol: "Artículo", qtyCol: "Cant.", rateCol: "Precio", amountCol: "Importe", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "¿Estás seguro de que quieres reiniciar el formulario?", payNow: "Pagar Ahora" },
+        // ... (other languages can be added here following the same key structure)
+        it: { pageTitle: "Generatore di Fatture Professionale", companySectionTitle: "La Tua Azienda", companyNameLabel: "Nome Azienda *", logoLabel: "Logo Azienda", addressLabel: "Indirizzo", emailLabel: "Email", phoneLabel: "Telefono", clientSectionTitle: "Cliente", clientNameLabel: "Nome Cliente *", invoiceSectionTitle: "Fattura", invoiceNumLabel: "Numero Fattura *", currencyLabel: "Valuta", invoiceDateLabel: "Data", dueDateLabel: "Scadenza", itemsSectionTitle: "Voci Fattura", itemDescLabel: "Descrizione", itemQtyLabel: "Qtà", itemRateLabel: "Prezzo", addItem: "+ Aggiungi Voce", totalsSectionTitle: "Pagamento", discountLabel: "Sconto (es. 50 o 10%)", taxRateLabel: "Aliquota IVA (%)", notesLabel: "Note", paymentLinkLabel: "Link Pagamento (Opzionale)", downloadPDF: "Scarica PDF", downloadDOCX: "Scarica DOCX", fromLabel: "Da", toLabel: "Fattura A", detailsLabel: "Dettagli", itemCol: "Voce", qtyCol: "Qtà", rateCol: "Prezzo", amountCol: "Importo", subtotalLabel: "Subtotale", totalLabel: "Totale", notesPreviewLabel: "Note:", resetConfirm: "Sei sicuro di voler reimpostare il modulo?", payNow: "Paga Adesso" },
+        pt: { pageTitle: "Gerador de Faturas Profissional", companySectionTitle: "Sua Empresa", companyNameLabel: "Nome da Empresa *", logoLabel: "Logotipo", addressLabel: "Endereço", emailLabel: "Email", phoneLabel: "Telefone", clientSectionTitle: "Cliente", clientNameLabel: "Nome do Cliente *", invoiceSectionTitle: "Fatura", invoiceNumLabel: "Nº da Fatura *", currencyLabel: "Moeda", invoiceDateLabel: "Data", dueDateLabel: "Vencimento", itemsSectionTitle: "Itens da Fatura", itemDescLabel: "Descrição", itemQtyLabel: "Qtd", itemRateLabel: "Taxa", addItem: "+ Adicionar Item", totalsSectionTitle: "Pagamento", discountLabel: "Desconto (ex: 50 ou 10%)", taxRateLabel: "Imposto (%)", notesLabel: "Notas", paymentLinkLabel: "Link de Pagamento (Opcional)", downloadPDF: "Baixar PDF", downloadDOCX: "Baixar DOCX", fromLabel: "De", toLabel: "Faturar Para", detailsLabel: "Detalhes", itemCol: "Item", qtyCol: "Qtd", rateCol: "Taxa", amountCol: "Valor", subtotalLabel: "Subtotal", totalLabel: "Total", notesPreviewLabel: "Notas:", resetConfirm: "Tem certeza que deseja redefinir o formulário?", payNow: "Pagar Agora" },
+        fr: { pageTitle: "Générateur de Factures Professionnel", companySectionTitle: "Votre Entreprise", companyNameLabel: "Nom de l'entreprise *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "E-mail", phoneLabel: "Téléphone", clientSectionTitle: "Client", clientNameLabel: "Nom du client *", invoiceSectionTitle: "Facture", invoiceNumLabel: "Nº de facture *", currencyLabel: "Devise", invoiceDateLabel: "Date", dueDateLabel: "Échéance", itemsSectionTitle: "Éléments", itemDescLabel: "Description", itemQtyLabel: "Qté", itemRateLabel: "Taux", addItem: "+ Ajouter un élément", totalsSectionTitle: "Paiement", discountLabel: "Remise (ex: 50 ou 10%)", taxRateLabel: "Taxe (%)", notesLabel: "Notes", paymentLinkLabel: "Lien de paiement (Optionnel)", downloadPDF: "Télécharger PDF", downloadDOCX: "Télécharger DOCX", fromLabel: "De", toLabel: "Facturer à", detailsLabel: "Détails", itemCol: "Élément", qtyCol: "Qté", rateCol: "Taux", amountCol: "Montant", subtotalLabel: "Sous-total", totalLabel: "Total", notesPreviewLabel: "Notes:", resetConfirm: "Êtes-vous sûr de vouloir réinitialiser le formulaire?", payNow: "Payer Maintenant" },
+        de: { pageTitle: "Professioneller Rechnungsgenerator", companySectionTitle: "Ihre Firma", companyNameLabel: "Firmenname *", logoLabel: "Logo", addressLabel: "Adresse", emailLabel: "Email", phoneLabel: "Telefon", clientSectionTitle: "Kunde", clientNameLabel: "Kundenname *", invoiceSectionTitle: "Rechnung", invoiceNumLabel: "Rechnungs-Nr. *", currencyLabel: "Währung", invoiceDateLabel: "Datum", dueDateLabel: "Fällig am", itemsSectionTitle: "Posten", itemDescLabel: "Beschreibung", itemQtyLabel: "Menge", itemRateLabel: "Satz", addItem: "+ Posten hinzufügen", totalsSectionTitle: "Zahlung", discountLabel: "Rabatt (z.B. 50 oder 10%)", taxRateLabel: "Steuer (%)", notesLabel: "Notizen", paymentLinkLabel: "Zahlungslink (Optional)", downloadPDF: "PDF herunterladen", downloadDOCX: "DOCX herunterladen", fromLabel: "Von", toLabel: "Rechnung an", detailsLabel: "Details", itemCol: "Posten", qtyCol: "Menge", rateCol: "Satz", amountCol: "Betrag", subtotalLabel: "Zwischensumme", totalLabel: "Gesamt", notesPreviewLabel: "Notizen:", resetConfirm: "Formular wirklich zurücksetzen?", payNow: "Jetzt bezahlen" },
+        ru: { pageTitle: "Генератор Счетов", companySectionTitle: "Ваша компания", companyNameLabel: "Название компании *", logoLabel: "Логотип", addressLabel: "Адрес", emailLabel: "Эл. почта", phoneLabel: "Телефон", clientSectionTitle: "Клиент", clientNameLabel: "Имя клиента *", invoiceSectionTitle: "Счет", invoiceNumLabel: "№ счета *", currencyLabel: "Валюта", invoiceDateLabel: "Дата", dueDateLabel: "Срок оплаты", itemsSectionTitle: "Позиции счета", itemDescLabel: "Описание", itemQtyLabel: "Кол-во", itemRateLabel: "Ставка", addItem: "+ Добавить", totalsSectionTitle: "Оплата", discountLabel: "Скидка (напр. 50 или 10%)", taxRateLabel: "Налог (%)", notesLabel: "Примечания", paymentLinkLabel: "Ссылка на оплату (необязательно)", downloadPDF: "Скачать PDF", downloadDOCX: "Скачать DOCX", fromLabel: "От", toLabel: "Счет для", detailsLabel: "Детали", itemCol: "Позиция", qtyCol: "Кол-во", rateCol: "Ставка", amountCol: "Сумма", subtotalLabel: "Подытог", totalLabel: "Итог", notesPreviewLabel: "Примечания:", resetConfirm: "Вы уверены, что хотите сбросить форму?", payNow: "Оплатить сейчас" },
+        sl: { pageTitle: "Generator Računov", companySectionTitle: "Vaše podjetje", companyNameLabel: "Ime podjetja *", logoLabel: "Logotip", addressLabel: "Naslov", emailLabel: "E-pošta", phoneLabel: "Telefon", clientSectionTitle: "Stranka", clientNameLabel: "Ime stranke *", invoiceSectionTitle: "Račun", invoiceNumLabel: "Št. računa *", currencyLabel: "Valuta", invoiceDateLabel: "Datum", dueDateLabel: "Rok plačila", itemsSectionTitle: "Postavke", itemDescLabel: "Opis", itemQtyLabel: "Kol.", itemRateLabel: "Cena", addItem: "+ Dodaj postavko", totalsSectionTitle: "Plačilo", discountLabel: "Popust (npr. 50 ali 10%)", taxRateLabel: "Davek (%)", notesLabel: "Opombe", paymentLinkLabel: "Povezava za plačilo (Opcijsko)", downloadPDF: "Prenesi PDF", downloadDOCX: "Prenesi DOCX", fromLabel: "Od", toLabel: "Račun za", detailsLabel: "Podrobnosti", itemCol: "Postavka", qtyCol: "Kol.", rateCol: "Cena", amountCol: "Znesek", subtotalLabel: "Skupaj brez DDV", totalLabel: "Skupaj", notesPreviewLabel: "Opombe:", resetConfirm: "Ali ste prepričani, da želite ponastaviti obrazec?", payNow: "Plačaj zdaj" }
     },
     
     // APP INITIALIZATION
@@ -245,39 +240,33 @@ const App = {
         this.populateSelects();
         this.loadState();
         this.addEventListeners();
+        this.elements.copyrightYear.textContent = new Date().getFullYear();
         this.render();
     },
 
-    // CACHE DOM ELEMENTS FOR PERFORMANCE
     cacheDOMElements() {
-        const query = (selector) => document.querySelector(selector);
         const get = (id) => document.getElementById(id);
         this.elements = {
-            // Panels
-            formPanel: query('.panel-form'),
             previewPanel: get('panel-preview'),
             previewContainer: get('invoice-preview-container'),
-            // Inputs
             companyName: get('companyName'), logoUpload: get('logoUpload'), companyAddress: get('companyAddress'),
             companyEmail: get('companyEmail'), companyPhone: get('companyPhone'), clientName: get('clientName'),
             clientAddress: get('clientAddress'), clientEmail: get('clientEmail'), invoiceNumber: get('invoiceNumber'),
-            currency: get('currency'), invoiceDate: get('invoiceDate'), dueDate: get('dueDate'),
+            currency: get('currency'), invoiceDate: get('invoiceDate'), dueDate: get('dueDate'), paymentLink: get('paymentLink'),
             itemsContainer: get('items-container'), discount: get('discount'), taxRate: get('taxRate'), notes: get('notes'),
-            // Buttons and controls
             addItemBtn: get('addItemBtn'), generatePDFBtn: get('generatePDFBtn'), generateDOCXBtn: get('generateDOCXBtn'),
             resetBtn: get('resetBtn'), themeToggle: get('themeToggle'), languageSelector: get('languageSelector'),
-            showPreviewBtn: get('showPreviewBtn'),
+            showPreviewBtn: get('showPreviewBtn'), copyrightYear: get('copyrightYear'),
         };
     },
 
-    // STATE MANAGEMENT (LOAD/SAVE/DEFAULT)
     loadState() {
-        const savedState = localStorage.getItem('invoiceAppState');
+        const savedState = localStorage.getItem('invoiceAppStateV3');
         this.state = savedState ? JSON.parse(savedState) : this.getDefaultState();
     },
 
     saveState() {
-        localStorage.setItem('invoiceAppState', JSON.stringify(this.state));
+        localStorage.setItem('invoiceAppStateV3', JSON.stringify(this.state));
     },
 
     getDefaultState() {
@@ -291,27 +280,27 @@ const App = {
         return {
             lang: defaultLang,
             theme: 'light',
-            companyName: 'Your Company',
+            companyName: 'Your Company Inc.',
             logo: null,
-            companyAddress: '123 Business Rd, Suite 100\nCity, State 12345',
+            companyAddress: '123 Innovation Drive\nSan Francisco, CA 94105',
             companyEmail: 'contact@yourcompany.com',
             companyPhone: '(123) 456-7890',
-            clientName: 'Client Name',
-            clientAddress: '456 Client Ave\nCity, State 54321',
-            clientEmail: 'client@email.com',
+            clientName: 'Acme Corporation',
+            clientAddress: '456 Client Avenue\nNew York, NY 10012',
+            clientEmail: 'contact@acme.corp',
             invoiceNumber: `INV-${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`,
             currency: 'USD',
             invoiceDate: today.toISOString().split('T')[0],
             dueDate: dueDate.toISOString().split('T')[0],
-            items: [{ description: 'Website Design & Development', quantity: 1, rate: 2500 }],
+            items: [{ description: 'Premium Web Development Services', quantity: 1, rate: 5000 }],
             discount: '0',
-            taxRate: 0,
-            notes: 'Thank you for your business! Payment is due within 30 days.',
+            taxRate: 8,
+            notes: 'Thank you for your business. Payment is due within 30 days.',
+            paymentLink: '',
             totals: { subtotal: 0, discount: 0, tax: 0, total: 0 },
         };
     },
     
-    // MAIN RENDER FUNCTION (UPDATES THE ENTIRE UI)
     render() {
         this.updateTotals();
         this.updateFormInputs();
@@ -336,7 +325,7 @@ const App = {
             const itemRow = document.createElement('div');
             itemRow.className = 'item-row';
             itemRow.innerHTML = `
-                <input type="text" class="item-description" data-index="${index}" placeholder="${this.getTranslation('itemDescLabel')}" value="${item.description}">
+                <input type="text" class="item-description" data-index="${index}" value="${item.description}">
                 <input type="number" class="item-quantity" data-index="${index}" min="0" step="1" value="${item.quantity}">
                 <input type="number" class="item-rate" data-index="${index}" min="0" step="0.01" value="${item.rate}">
                 <button class="btn-remove-item" data-index="${index}" title="Remove Item">❌</button>
@@ -346,30 +335,32 @@ const App = {
     },
 
     renderPreview() {
-        const { totals, lang, currency } = this.state;
+        const { totals, lang, currency, paymentLink } = this.state;
         const format = (val) => this.formatCurrency(val, currency, lang);
         
         const itemsHTML = this.state.items.map(item => `
             <tr>
-                <td>${item.description}</td>
-                <td style="text-align:center;">${item.quantity}</td>
-                <td style="text-align:right;">${format(item.rate)}</td>
-                <td style="text-align:right;">${format(item.rate * item.quantity)}</td>
+                <td>${item.description || ''}</td>
+                <td style="text-align:center;">${item.quantity || 0}</td>
+                <td style="text-align:right;">${format(parseFloat(item.rate) || 0)}</td>
+                <td style="text-align:right;">${format((parseFloat(item.rate) || 0) * (parseFloat(item.quantity) || 0))}</td>
             </tr>`).join('');
+            
+        const paymentLinkHTML = paymentLink ? `<a href="${paymentLink}" target="_blank" class="preview-pay-btn">${this.getTranslation('payNow')}</a>` : '';
 
         this.elements.previewContainer.innerHTML = `
             <table style="width:100%; margin-bottom: 2rem;">
                 <tr>
                     <td style="width:50%; vertical-align:top;">
-                        ${this.state.logo ? `<img src="${this.state.logo}" alt="logo" style="max-width:180px; max-height:90px;">` : `<h1>INVOICE</h1>`}
+                        ${this.state.logo ? `<img src="${this.state.logo}" alt="logo" style="max-width:180px; max-height:90px;">` : `<h1 style="color:#111827;">INVOICE</h1>`}
                     </td>
                     <td style="width:50%; text-align:right; vertical-align:top;">
-                        <h3 style="margin-bottom:1rem;">${this.state.companyName}</h3>
-                        <p>${this.state.companyAddress.replace(/\n/g, '<br>')}</p>
+                        <h3 style="margin-bottom:1rem; font-size: 1rem;">${this.state.companyName}</h3>
+                        <p style="color:#6b7280;">${this.state.companyAddress.replace(/\n/g, '<br>')}</p>
                     </td>
                 </tr>
             </table>
-            <table style="width:100%; margin-bottom: 2rem;">
+            <table style="width:100%; margin-bottom: 3rem;">
                 <tr>
                     <td style="width:50%; vertical-align:top;">
                         <h3>${this.getTranslation('toLabel')}</h3>
@@ -393,51 +384,44 @@ const App = {
             </table>
             <table style="width:100%; margin-top:2rem;">
                 <tr>
-                    <td style="width:60%;">
-                        ${this.state.notes ? `<h3>${this.getTranslation('notesPreviewLabel')}</h3><p>${this.state.notes.replace(/\n/g, '<br>')}</p>` : ''}
+                    <td style="width:60%; vertical-align:bottom;">
+                        ${paymentLinkHTML}
                     </td>
                     <td style="width:40%; text-align:right;">
                         <p><strong>${this.getTranslation('subtotalLabel')}:</strong> ${format(totals.subtotal)}</p>
-                        <p><strong>${this.getTranslation('discountLabel')}:</strong> ${format(totals.discount)}</p>
+                        <p><strong>${this.getTranslation('discountLabel')}:</strong> - ${format(totals.discount)}</p>
                         <p><strong>${this.getTranslation('taxRateLabel')}:</strong> ${format(totals.tax)}</p>
-                        <h3 style="margin-top:1rem;"><strong>${this.getTranslation('totalLabel')}:</strong> ${format(totals.total)}</h3>
+                        <h3 style="margin-top:1rem; font-size:1.2rem;"><strong>${this.getTranslation('totalLabel')}:</strong> ${format(totals.total)}</h3>
                     </td>
                 </tr>
             </table>
+             ${this.state.notes ? `<div style="margin-top:2rem;"><h3>${this.getTranslation('notesPreviewLabel')}</h3><p style="color:#6b7280;">${this.state.notes.replace(/\n/g, '<br>')}</p></div>` : ''}
         `;
     },
 
-    // EVENT LISTENERS SETUP
     addEventListeners() {
-        this.elements.formPanel.addEventListener('input', this.handleFormInput.bind(this));
-        this.elements.itemsContainer.addEventListener('input', this.handleItemInput.bind(this));
+        document.body.addEventListener('input', this.handleInput.bind(this));
         this.elements.itemsContainer.addEventListener('click', this.handleItemClick.bind(this));
-        
         this.elements.addItemBtn.addEventListener('click', this.addItem.bind(this));
         this.elements.generatePDFBtn.addEventListener('click', this.generatePDF.bind(this));
         this.elements.generateDOCXBtn.addEventListener('click', this.generateDOCX.bind(this));
         this.elements.resetBtn.addEventListener('click', this.resetForm.bind(this));
         this.elements.themeToggle.addEventListener('click', this.toggleTheme.bind(this));
-        this.elements.languageSelector.addEventListener('change', (e) => { this.state.lang = e.target.value; this.render(); });
         this.elements.logoUpload.addEventListener('change', this.handleLogoUpload.bind(this));
-        
-        // Mobile preview toggle
         this.elements.showPreviewBtn.addEventListener('click', () => this.elements.previewPanel.classList.add('visible'));
         this.elements.previewPanel.addEventListener('click', (e) => { if (e.target === this.elements.previewPanel) this.elements.previewPanel.classList.remove('visible'); });
     },
 
-    handleFormInput(e) {
+    handleInput(e) {
         if (this.state.hasOwnProperty(e.target.id)) {
             this.state[e.target.id] = e.target.value;
             this.render();
+        } else if (e.target.classList.contains('item-description') || e.target.classList.contains('item-quantity') || e.target.classList.contains('item-rate')) {
+            const index = e.target.dataset.index;
+            const property = e.target.className.split(' ')[0].replace('item-', '');
+            this.state.items[index][property] = e.target.value;
+            this.render();
         }
-    },
-
-    handleItemInput(e) {
-        const index = e.target.dataset.index;
-        const property = e.target.className.split(' ')[0].replace('item-', '');
-        this.state.items[index][property] = e.target.value;
-        this.render();
     },
 
     handleItemClick(e) {
@@ -453,15 +437,11 @@ const App = {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (event) => {
-                this.state.logo = event.target.result;
-                this.render();
-            };
+            reader.onload = (event) => { this.state.logo = event.target.result; this.render(); };
             reader.readAsDataURL(file);
         }
     },
 
-    // ACTIONS AND HELPERS
     addItem() {
         this.state.items.push({ description: '', quantity: 1, rate: 0 });
         this.render();
@@ -475,8 +455,8 @@ const App = {
 
         let discountAmount = 0;
         const discountInput = this.state.discount;
-        if (discountInput.includes('%')) {
-            const percentage = parseFloat(discountInput.replace('%', '')) || 0;
+        if (String(discountInput).includes('%')) {
+            const percentage = parseFloat(String(discountInput).replace('%', '')) || 0;
             discountAmount = subtotal * (percentage / 100);
         } else {
             discountAmount = parseFloat(discountInput) || 0;
@@ -491,13 +471,12 @@ const App = {
 
     resetForm() {
         if (confirm(this.getTranslation('resetConfirm'))) {
-            localStorage.removeItem('invoiceAppState');
+            localStorage.removeItem('invoiceAppStateV3');
             this.state = this.getDefaultState();
             this.render();
         }
     },
 
-    // UI & FORMATTING
     setTheme() {
         document.documentElement.setAttribute('data-theme', this.state.theme);
         this.elements.themeToggle.textContent = this.state.theme === 'dark' ? '☀️' : '🌙';
@@ -511,7 +490,6 @@ const App = {
     populateSelects() {
         const currencyOptions = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', CAD: 'C$', AUD: 'A$', CHF: 'Fr', CNY: '¥' };
         this.elements.currency.innerHTML = Object.entries(currencyOptions).map(([code, symbol]) => `<option value="${code}">${code} (${symbol})</option>`).join('');
-
         this.elements.languageSelector.innerHTML = Object.keys(this.translations).map(lang => `<option value="${lang}">${new Intl.DisplayNames([lang], {type: 'language'}).of(lang)}</option>`).join('');
     },
     
@@ -525,12 +503,14 @@ const App = {
     
     translateUI() {
         document.querySelectorAll('[data-translate-key]').forEach(el => {
-            el.textContent = this.getTranslation(el.dataset.translateKey);
+            const key = el.dataset.translateKey;
+            const translation = this.getTranslation(key);
+            if(el.placeholder !== undefined) el.placeholder = translation;
+            else el.textContent = translation;
         });
         document.title = this.getTranslation('pageTitle');
     },
     
-    // DOCUMENT GENERATION
     validateForm() {
         let isValid = true;
         ['companyName', 'clientName', 'invoiceNumber'].forEach(id => {
@@ -547,81 +527,108 @@ const App = {
 
     generatePDF() {
         if (!this.validateForm()) return;
-
         const { jsPDF } = window;
         const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
         
-        const { lang, currency } = this.state;
+        const { lang, currency, totals } = this.state;
         const format = (val) => this.formatCurrency(val, currency, lang);
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        doc.setFont('helvetica', 'normal');
         
-        doc.html(this.elements.previewContainer, {
-            callback: (doc) => {
-                doc.save(`Invoice_${this.state.invoiceNumber}.pdf`);
-            },
-            margin: [15, 15, 15, 15],
-            autoPaging: 'text',
-            width: 180,
-            windowWidth: 800,
+        // Logo and company details
+        if (this.state.logo) doc.addImage(this.state.logo, 'PNG', margin, margin, 40, 20);
+        else doc.setFontSize(22).setFont('helvetica', 'bold').text('INVOICE', margin, margin + 10);
+        
+        doc.setFontSize(9).setTextColor(100);
+        doc.text(this.state.companyName, pageWidth - margin, margin + 10, { align: 'right' });
+        doc.text(this.state.companyAddress.replace(/\n/g, '\n'), pageWidth - margin, margin + 15, { align: 'right' });
+
+        // Bill To and Invoice Details
+        let y = margin + 40;
+        doc.setFontSize(11).setFont('helvetica', 'bold').setTextColor(0);
+        doc.text(this.getTranslation('toLabel'), margin, y);
+        doc.text(this.getTranslation('detailsLabel'), pageWidth / 2, y);
+        doc.setLineWidth(0.2).line(margin, y + 2, pageWidth - margin, y + 2);
+        y += 8;
+
+        doc.setFontSize(10).setFont('helvetica', 'normal');
+        doc.text(`${this.state.clientName}\n${this.state.clientAddress.replace(/\n/g, '\n')}\n${this.state.clientEmail}`, margin, y);
+        const detailsText = `${this.getTranslation('invoiceNumLabel')}: ${this.state.invoiceNumber}\n${this.getTranslation('invoiceDateLabel')}: ${this.state.invoiceDate}\n${this.getTranslation('dueDateLabel')}: ${this.state.dueDate}`;
+        doc.text(detailsText, pageWidth / 2, y);
+
+        // Items Table
+        const tableBody = this.state.items.map(item => [item.description || '', String(item.quantity || 0), format(parseFloat(item.rate) || 0), format((parseFloat(item.rate) || 0) * (parseFloat(item.quantity) || 0))]);
+        doc.autoTable({
+            head: [[this.getTranslation('itemCol'), this.getTranslation('qtyCol'), this.getTranslation('rateCol'), this.getTranslation('amountCol')]],
+            body: tableBody,
+            startY: y + 30, theme: 'grid',
+            headStyles: { fillColor: [22, 22, 22], textColor: 255 },
+            styles: { fontSize: 9 },
+            columnStyles: { 1: { halign: 'center' }, 2: { halign: 'right' }, 3: { halign: 'right' } }
         });
+        
+        // Totals and Notes
+        let finalY = doc.autoTable.previous.finalY + 10;
+        const totalsText = `${this.getTranslation('subtotalLabel')}: ${format(totals.subtotal)}\n${this.getTranslation('discountLabel')}: -${format(totals.discount)}\n${this.getTranslation('taxRateLabel')}: ${format(totals.tax)}\n\n${this.getTranslation('totalLabel')}: ${format(totals.total)}`;
+        doc.setFontSize(10).text(totalsText, pageWidth - margin, finalY, { align: 'right' });
+
+        if(this.state.paymentLink) {
+            doc.setFontSize(10).setFont('helvetica', 'bold').text(this.getTranslation('payNow'), margin, finalY + 10, { url: this.state.paymentLink });
+            doc.setDrawColor(0,0,255).setLineWidth(0.2).line(margin, finalY + 10.5, margin + doc.getTextWidth(this.getTranslation('payNow')), finalY + 10.5);
+        }
+        
+        doc.setDrawColor(0); // Reset draw color
+        if (this.state.notes) {
+            doc.setFontSize(9).setFont('helvetica', 'bold').text(this.getTranslation('notesPreviewLabel'), margin, finalY + 20);
+            doc.setFont('helvetica', 'normal').text(this.state.notes, margin, finalY + 25, { maxWidth: pageWidth / 2 - margin });
+        }
+        
+        doc.save(`Invoice_${this.state.invoiceNumber}.pdf`);
     },
 
     generateDOCX() {
-        if (!this.validateForm()) return;
+        if (!this.validateForm() || typeof docx === 'undefined') return;
+        const { Document, Packer, Paragraph, TextRun, Table, TableCell, TableRow, WidthType, AlignmentType, ExternalHyperlink } = docx;
         
-        // This feature requires the docx library to be loaded
-        if (typeof docx === 'undefined') {
-            alert('DOCX generation library not loaded.');
-            return;
-        }
-
-        const { Document, Packer, Paragraph, TextRun, Table, TableCell, TableRow, WidthType, AlignmentType } = docx;
-        
-        const { lang, currency } = this.state;
+        const { lang, currency, totals } = this.state;
         const format = (val) => this.formatCurrency(val, currency, lang);
         
-        const text = (txt) => new TextRun(txt);
-        const bold = (txt) => new TextRun({ text: txt, bold: true });
+        const text = (txt) => new TextRun(String(txt));
+        const bold = (txt) => new TextRun({ text: String(txt), bold: true });
 
         const itemsData = [
             [bold(this.getTranslation('itemCol')), bold(this.getTranslation('qtyCol')), bold(this.getTranslation('rateCol')), bold(this.getTranslation('amountCol'))],
-            ...this.state.items.map(item => [
-                text(item.description), text(String(item.quantity)), text(format(item.rate)), text(format(item.quantity * item.rate))
-            ])
+            ...this.state.items.map(item => [text(item.description), text(item.quantity), text(format(item.rate)), text(format(item.quantity * item.rate))])
         ];
 
-        const doc = new Document({
-            sections: [{
-                children: [
-                    new Paragraph({ children: [text(this.state.companyName)], alignment: AlignmentType.RIGHT }),
-                    new Paragraph({ children: [bold("INVOICE")], heading: "Heading1", size: 36 }),
-                    new Paragraph(""),
-                    new Paragraph({ children: [bold(this.getTranslation('toLabel')), text(`: ${this.state.clientName}`)] }),
-                    new Paragraph({ children: [bold(this.getTranslation('invoiceNumLabel')), text(`: ${this.state.invoiceNumber}`)] }),
-                    new Paragraph(""),
-                    new Table({
-                        width: { size: 100, type: WidthType.PERCENTAGE },
-                        rows: itemsData.map(rowData => new TableRow({
-                            children: rowData.map(cellData => new TableCell({ children: [new Paragraph({ children: [cellData] })] }))
-                        }))
-                    }),
-                    new Paragraph(""),
-                    new Paragraph({ children: [text(`${this.getTranslation('subtotalLabel')}: ${format(this.state.totals.subtotal)}`)], alignment: AlignmentType.RIGHT }),
-                    new Paragraph({ children: [text(`${this.getTranslation('discountLabel')}: ${format(this.state.totals.discount)}`)], alignment: AlignmentType.RIGHT }),
-                    new Paragraph({ children: [text(`${this.getTranslation('taxRateLabel')}: ${format(this.state.totals.tax)}`)], alignment: AlignmentType.RIGHT }),
-                    new Paragraph({ children: [bold(`${this.getTranslation('totalLabel')}: ${format(this.state.totals.total)}`)], alignment: AlignmentType.RIGHT }),
-                ],
-            }],
-        });
+        const children = [
+            new Paragraph({ children: [bold("INVOICE")], alignment: AlignmentType.CENTER, style: "Heading1" }),
+            new Paragraph({ text: "\n" }),
+            new Paragraph({ children: [bold(this.getTranslation('toLabel')), text(`: ${this.state.clientName}`)] }),
+            new Paragraph({ children: [bold(this.getTranslation('invoiceNumLabel')), text(`: ${this.state.invoiceNumber}`)] }),
+            new Paragraph({ text: "\n" }),
+            new Table({ width: { size: 100, type: WidthType.PERCENTAGE }, rows: itemsData.map(rowData => new TableRow({ children: rowData.map(cellData => new TableCell({ children: [new Paragraph({ children: [cellData] })] })) })) }),
+            new Paragraph({ text: "\n" }),
+            new Paragraph({ children: [text(`${this.getTranslation('subtotalLabel')}: ${format(totals.subtotal)}`)], alignment: AlignmentType.RIGHT }),
+            new Paragraph({ children: [text(`${this.getTranslation('discountLabel')}: -${format(totals.discount)}`)], alignment: AlignmentType.RIGHT }),
+            new Paragraph({ children: [text(`${this.getTranslation('taxRateLabel')}: ${format(totals.tax)}`)], alignment: AlignmentType.RIGHT }),
+            new Paragraph({ children: [bold(`${this.getTranslation('totalLabel')}: ${format(totals.total)}`)], alignment: AlignmentType.RIGHT }),
+        ];
 
+        if(this.state.paymentLink){
+            children.push(new Paragraph({text: "\n"}));
+            children.push(new Paragraph({ children: [ new ExternalHyperlink({ children: [ new TextRun({ text: this.getTranslation('payNow'), style: "Hyperlink" }) ], link: this.state.paymentLink }) ]}));
+        }
+
+        const doc = new Document({ sections: [{ children }] });
         Packer.toBlob(doc).then(blob => {
-            const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
-            a.href = url;
+            a.href = URL.createObjectURL(blob);
             a.download = `Invoice_${this.state.invoiceNumber}.docx`;
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         });
     },
 };
