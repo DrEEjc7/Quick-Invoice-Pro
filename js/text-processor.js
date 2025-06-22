@@ -22,10 +22,9 @@ const Processor = {
     formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
-        // A simple timezone offset fix
         const userTimezoneOffset = date.getTimezoneOffset() * 60000;
         const correctedDate = new Date(date.getTime() + userTimezoneOffset);
-        return correctedDate.toLocaleDateString('en-CA'); // Using 'en-CA' for YYYY-MM-DD format consistency
+        return correctedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format
     },
 
     parseDiscount(discountInput, subtotal) {
