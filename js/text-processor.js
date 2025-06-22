@@ -1,9 +1,6 @@
 const Processor = {
     currencySymbols: {
-        USD: '$',
-        EUR: '€',
-        GBP: '£',
-        CAD: 'C$'
+        USD: '$', EUR: '€', GBP: '£', CAD: 'C$', JPY: '¥', CNY: '¥', INR: '₹'
     },
 
     getTodayDate() {
@@ -28,11 +25,7 @@ const Processor = {
         // A simple timezone offset fix
         const userTimezoneOffset = date.getTimezoneOffset() * 60000;
         const correctedDate = new Date(date.getTime() + userTimezoneOffset);
-        return correctedDate.toLocaleDateString('en-US', {
-            month: 'short',
-            day: '2-digit',
-            year: 'numeric'
-        });
+        return correctedDate.toLocaleDateString('en-CA'); // Using 'en-CA' for YYYY-MM-DD format consistency
     },
 
     parseDiscount(discountInput, subtotal) {
