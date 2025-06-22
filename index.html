@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Invoice Pro</title>
+    <title data-i18n-key="title">Quick Invoice Pro</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -22,16 +22,15 @@
             <div class="header-left">
                 <div class="logo-section">
                     <div class="logo-icon">QIP</div>
-                    <div>
-                        <div class="logo-text">Quick Invoice Pro</div>
-                        <div class="logo-subtitle">by DrEEjc7</div>
+                    <div class="logo-text-container">
+                        <div class="logo-text" data-i18n-key="title">Quick Invoice Pro</div>
                     </div>
                 </div>
             </div>
             <div class="header-right">
-                <div class="header-meta-item">Invoice: <span id="headerInvoiceNumber"></span></div>
-                <div class="header-meta-item">Issued: <span id="headerIssueDate"></span></div>
-                <div class="header-meta-item">Due: <span id="headerDueDate"></span></div>
+                <div class="language-selector-wrapper">
+                     <select id="languageSelector" class="form-select form-select-sm"></select>
+                </div>
             </div>
         </header>
 
@@ -39,105 +38,107 @@
             <div class="sidebar-content">
                 <section class="form-section">
                     <div class="section-header">
-                        <h2 class="section-title">Client Details</h2>
+                        <h2 class="section-title" data-i18n-key="clientDetails">Client Details</h2>
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="clientName" class="form-label">Company Name</label>
-                            <input type="text" class="form-input" id="clientName" placeholder="Client Inc.">
+                            <label for="clientName" class="form-label" data-i18n-key="companyName">Company Name</label>
+                            <input type="text" class="form-input" id="clientName" data-i18n-placeholder="clientNamePlaceholder">
                         </div>
                         <div class="form-group">
-                            <label for="clientEmail" class="form-label">Email</label>
-                            <input type="email" class="form-input" id="clientEmail" placeholder="contact@client.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="clientAddress" class="form-label">Address</label>
-                            <textarea class="form-input form-textarea" id="clientAddress" placeholder="123 Main Street"></textarea>
+                            <label for="clientAddress" class="form-label" data-i18n-key="address">Address</label>
+                            <textarea class="form-input form-textarea" id="clientAddress" data-i18n-placeholder="addressPlaceholder"></textarea>
                         </div>
                     </div>
                 </section>
 
                 <section class="form-section">
                     <div class="section-header">
-                        <h2 class="section-title">Your Details</h2>
-                        <p class="section-subtitle">This will appear as the 'From' address.</p>
+                        <h2 class="section-title" data-i18n-key="yourDetails">Your Details</h2>
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="companyName" class="form-label">Company Name</label>
-                            <input type="text" class="form-input" id="companyName" placeholder="Your Company LLC">
+                            <label for="companyName" class="form-label" data-i18n-key="companyName">Company Name</label>
+                            <input type="text" class="form-input" id="companyName" data-i18n-placeholder="yourCompanyNamePlaceholder">
                         </div>
                         <div class="form-group">
-                            <label for="companyAddress" class="form-label">Address</label>
-                            <textarea class="form-input form-textarea" id="companyAddress" placeholder="456 Your Street"></textarea>
+                            <label for="companyAddress" class="form-label" data-i18n-key="address">Address</label>
+                            <textarea class="form-input form-textarea" id="companyAddress" data-i18n-placeholder="yourAddressPlaceholder"></textarea>
                         </div>
                     </div>
                 </section>
 
                 <section class="form-section">
-                    <div class="section-header"><h2 class="section-title">Invoice Details</h2></div>
+                    <div class="section-header"><h2 class="section-title" data-i18n-key="invoiceDetails">Invoice Details</h2></div>
                     <div class="form-grid form-grid-2">
                         <div class="form-group">
-                            <label for="invoiceNumber" class="form-label">Invoice Number</label>
+                            <label for="invoiceNumber" class="form-label" data-i18n-key="invoiceNumber">Invoice Number</label>
                             <input type="text" class="form-input" id="invoiceNumber" placeholder="INV-001">
                         </div>
                         <div class="form-group">
-                            <label for="currency" class="form-label">Currency</label>
+                            <label for="invoiceDate" class="form-label" data-i18n-key="issueDate">Issue Date</label>
+                            <input type="date" class="form-input" id="invoiceDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="dueDate" class="form-label" data-i18n-key="dueDate">Due Date</label>
+                            <input type="date" class="form-input" id="dueDate">
+                        </div>
+                         <div class="form-group">
+                            <label for="currency" class="form-label" data-i18n-key="currency">Currency</label>
                             <select class="form-input form-select" id="currency">
                                 <option value="USD">USD ($)</option>
                                 <option value="EUR">EUR (€)</option>
                                 <option value="GBP">GBP (£)</option>
                                 <option value="CAD">CAD (C$)</option>
+                                <option value="JPY">JPY (¥)</option>
+                                <option value="CNY">CNY (¥)</option>
+                                <option value="INR">INR (₹)</option>
                             </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="invoiceDate" class="form-label">Issue Date</label>
-                            <input type="date" class="form-input" id="invoiceDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="dueDate" class="form-label">Due Date</label>
-                            <input type="date" class="form-input" id="dueDate">
                         </div>
                     </div>
                 </section>
 
                 <section class="form-section">
-                    <div class="section-header"><h2 class="section-title">Invoice Items</h2></div>
+                    <div class="section-header"><h2 class="section-title" data-i18n-key="invoiceItems">Invoice Items</h2></div>
                     <div class="items-section">
-                        <div class="items-header">
-                            <div class="items-header-label">Description</div>
-                            <div class="items-header-label">Qty</div>
-                            <div class="items-header-label">Price</div>
+                        <div id="itemsHeader" class="items-header">
+                            <div class="items-header-label" data-i18n-key="description">Description</div>
+                            <div class="items-header-label" data-i18n-key="qty">Qty</div>
+                            <div class="items-header-label" data-i18n-key="price">Price</div>
                             <div></div>
                         </div>
                         <div id="itemsContainer"></div>
-                        <button type="button" class="add-item-btn" id="addItemBtn">+ Add Item</button>
+                        <button type="button" class="add-item-btn" id="addItemBtn" data-i18n-key="addItem">+ Add Item</button>
                     </div>
                 </section>
 
                 <section class="form-section">
-                    <div class="section-header"><h2 class="section-title">Totals & Notes</h2></div>
+                    <div class="section-header"><h2 class="section-title" data-i18n-key="totalsAndNotes">Totals & Notes</h2></div>
                     <div class="form-grid form-grid-2">
                         <div class="form-group">
-                            <label for="discount" class="form-label">Discount</label>
-                            <input type="text" class="form-input" id="discount" placeholder="10% or 50">
+                            <label for="discount" class="form-label" data-i18n-key="discount">Discount</label>
+                            <input type="text" class="form-input" id="discount" data-i18n-placeholder="discountPlaceholder">
                         </div>
                         <div class="form-group">
-                            <label for="taxRate" class="form-label">Tax Rate (%)</label>
+                            <label for="taxRate" class="form-label" data-i18n-key="taxRate">Tax Rate (%)</label>
                             <input type="number" class="form-input" id="taxRate" placeholder="0" step="0.1">
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label for="paymentLink" class="form-label" data-i18n-key="paymentLink">Payment Link</label>
+                        <input type="url" class="form-input" id="paymentLink" data-i18n-placeholder="paymentLinkPlaceholder">
+                    </div>
                     <div class="form-group">
-                        <label for="notes" class="form-label">Notes</label>
-                        <textarea class="form-input form-textarea" id="notes" placeholder="Additional notes or payment instructions."></textarea>
+                        <label for="notes" class="form-label" data-i18n-key="notes">Notes</label>
+                        <textarea class="form-input form-textarea" id="notes" data-i18n-placeholder="notesPlaceholder"></textarea>
                     </div>
                 </section>
             </div>
             <div class="action-section">
-                <button class="btn btn-primary" id="downloadBtn">Download PDF</button>
+                <button class="btn btn-primary" id="downloadBtn" data-i18n-key="downloadPDF">Download PDF</button>
                 <div class="btn-row">
-                    <button class="btn btn-secondary" id="printBtn">Print</button>
-                    <button class="btn btn-secondary" id="resetBtn">Reset</button>
+                    <button class="btn btn-secondary" id="printBtn" data-i18n-key="print">Print</button>
+                    <button class="btn btn-secondary" id="resetBtn" data-i18n-key="reset">Reset</button>
                 </div>
             </div>
         </aside>
@@ -161,24 +162,18 @@
 
                     <div class="invoice-body">
                         <div class="invoice-section from-section">
-                            <h3>From</h3>
+                            <h3 data-i18n-key="from">From</h3>
                             <div class="address-info" id="previewCompanyAddress"></div>
                         </div>
                         <div class="invoice-section to-section">
-                            <h3>To</h3>
+                            <h3 data-i18n-key="to">To</h3>
                             <div class="address-info" id="previewClientAddress"></div>
                         </div>
                     </div>
 
                     <table class="invoice-table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th class="text-center">QTY</th>
-                                <th class="text-right">Price</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
+                        <thead id="invoiceTableHeader">
+                            </thead>
                         <tbody id="invoiceTableBody">
                             </tbody>
                     </table>
@@ -186,35 +181,43 @@
                     <div class="invoice-totals">
                         <div class="totals-section">
                             <div class="total-row">
-                                <span class="total-label">Subtotal</span>
+                                <span class="total-label" data-i18n-key="subtotal">Subtotal</span>
                                 <span class="total-amount" id="subtotalAmount"></span>
                             </div>
                             <div class="total-row" id="discountRow" style="display: none;">
-                                <span class="total-label">Discount</span>
+                                <span class="total-label" data-i18n-key="discount">Discount</span>
                                 <span class="total-amount" id="discountAmount"></span>
                             </div>
                             <div class="total-row" id="taxRow" style="display: none;">
-                                <span class="total-label">Tax</span>
+                                <span class="total-label" data-i18n-key="tax">Tax</span>
                                 <span class="total-amount" id="taxAmount"></span>
                             </div>
                             <div class="total-row grand-total">
-                                <span class="total-label">Total</span>
+                                <span class="total-label" data-i18n-key="total">Total</span>
                                 <span class="total-amount" id="totalAmount"></span>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="payment-link-wrapper" id="previewPaymentLinkWrapper" style="display: none;">
+                        <a href="#" target="_blank" class="payment-link-btn" id="previewPaymentLink" data-i18n-key="payNow">Pay Now</a>
+                    </div>
 
-                    <div class="invoice-footer" id="invoiceFooter">
-                        <h4>Notes</h4>
+
+                    <div class="invoice-footer" id="invoiceFooter" style="display:none;">
+                        <h4 data-i18n-key="notes">Notes</h4>
                         <p id="previewNotes"></p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+    
+    <footer class="app-footer">
+        Copyright © <span id="currentYear"></span> • Designed with ❤️ by <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a>
+    </footer>
 
     <script src="js/text-processor.js" defer></script>
     <script src="js/app.js" defer></script>
-
 </body>
 </html>
