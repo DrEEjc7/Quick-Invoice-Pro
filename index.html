@@ -66,6 +66,14 @@
                             <label for="companyAddress" class="form-label" data-i18n-key="address">Address</label>
                             <textarea class="form-input form-textarea" id="companyAddress" data-i18n-placeholder="yourAddressPlaceholder"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="logoUpload" class="form-label" data-i18n-key="logo">Logo</label>
+                            <div class="image-upload-wrapper">
+                                <img src="" alt="Logo Preview" id="logoPreview" class="image-preview">
+                                <input type="file" id="logoUpload" class="image-upload-input" accept="image/png, image/jpeg">
+                                <button type="button" id="removeLogoBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -76,6 +84,14 @@
                             <label for="invoiceNumber" class="form-label" data-i18n-key="invoiceNumber">Invoice Number</label>
                             <input type="text" class="form-input" id="invoiceNumber" placeholder="INV-001">
                         </div>
+                         <div class="form-group">
+                            <label for="currency" class="form-label" data-i18n-key="currency">Currency</label>
+                            <select class="form-input form-select" id="currency">
+                                <option value="USD">USD ($)</option> <option value="EUR">EUR (€)</option> <option value="GBP">GBP (£)</option>
+                                <option value="CAD">CAD (C$)</option> <option value="JPY">JPY (¥)</option> <option value="CNY">CNY (¥)</option>
+                                <option value="INR">INR (₹)</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="invoiceDate" class="form-label" data-i18n-key="issueDate">Issue Date</label>
                             <input type="date" class="form-input" id="invoiceDate">
@@ -83,18 +99,6 @@
                         <div class="form-group">
                             <label for="dueDate" class="form-label" data-i18n-key="dueDate">Due Date</label>
                             <input type="date" class="form-input" id="dueDate">
-                        </div>
-                         <div class="form-group">
-                            <label for="currency" class="form-label" data-i18n-key="currency">Currency</label>
-                            <select class="form-input form-select" id="currency">
-                                <option value="USD">USD ($)</option>
-                                <option value="EUR">EUR (€)</option>
-                                <option value="GBP">GBP (£)</option>
-                                <option value="CAD">CAD (C$)</option>
-                                <option value="JPY">JPY (¥)</option>
-                                <option value="CNY">CNY (¥)</option>
-                                <option value="INR">INR (₹)</option>
-                            </select>
                         </div>
                     </div>
                 </section>
@@ -114,7 +118,7 @@
                 </section>
 
                 <section class="form-section">
-                    <div class="section-header"><h2 class="section-title" data-i18n-key="totalsAndNotes">Totals & Notes</h2></div>
+                    <div class="section-header"><h2 class="section-title" data-i18n-key="totalsAndNotes">Payment, Notes & Signature</h2></div>
                     <div class="form-grid form-grid-2">
                         <div class="form-group">
                             <label for="discount" class="form-label" data-i18n-key="discount">Discount</label>
@@ -133,6 +137,14 @@
                         <label for="notes" class="form-label" data-i18n-key="notes">Notes</label>
                         <textarea class="form-input form-textarea" id="notes" data-i18n-placeholder="notesPlaceholder"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="signatureUpload" class="form-label" data-i18n-key="signature">Signature</label>
+                        <div class="image-upload-wrapper">
+                             <img src="" alt="Signature Preview" id="signaturePreview" class="image-preview signature-preview">
+                             <input type="file" id="signatureUpload" class="image-upload-input" accept="image/png, image/jpeg">
+                             <button type="button" id="removeSignatureBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                        </div>
+                    </div>
                 </section>
             </div>
             <div class="action-section">
@@ -149,7 +161,10 @@
                 <div class="invoice-preview" id="invoicePreview">
                     <div class="invoice-header">
                         <div class="invoice-brand">
-                            <div class="invoice-logo" id="previewLogo">QIP</div>
+                            <div class="invoice-logo" id="previewLogoContainer">
+                                <img src="" alt="Company Logo" id="previewLogo" style="display: none;">
+                                <div class="invoice-logo-text" id="previewLogoText">QIP</div>
+                            </div>
                             <div class="invoice-company-name" id="previewCompanyName">Your Company</div>
                         </div>
                         <div class="invoice-meta">
@@ -173,41 +188,34 @@
                     </div>
 
                     <table class="invoice-table">
-                        <thead id="invoiceTableHeader">
-                            </thead>
-                        <tbody id="invoiceTableBody">
-                            </tbody>
+                        <thead id="invoiceTableHeader"></thead>
+                        <tbody id="invoiceTableBody"></tbody>
                     </table>
 
                     <div class="invoice-totals">
                         <div class="totals-section">
-                            <div class="total-row">
-                                <span class="total-label" data-i18n-key="subtotal">Subtotal</span>
-                                <span class="total-amount" id="subtotalAmount"></span>
-                            </div>
-                            <div class="total-row" id="discountRow" style="display: none;">
-                                <span class="total-label" data-i18n-key="discount">Discount</span>
-                                <span class="total-amount" id="discountAmount"></span>
-                            </div>
-                            <div class="total-row" id="taxRow" style="display: none;">
-                                <span class="total-label" data-i18n-key="tax">Tax</span>
-                                <span class="total-amount" id="taxAmount"></span>
-                            </div>
-                            <div class="total-row grand-total">
-                                <span class="total-label" data-i18n-key="total">Total</span>
-                                <span class="total-amount" id="totalAmount"></span>
-                            </div>
+                            <div class="total-row"><span class="total-label" data-i18n-key="subtotal"></span><span class="total-amount" id="subtotalAmount"></span></div>
+                            <div class="total-row" id="discountRow" style="display: none;"><span class="total-label" data-i18n-key="discount"></span><span class="total-amount" id="discountAmount"></span></div>
+                            <div class="total-row" id="taxRow" style="display: none;"><span class="total-label" data-i18n-key="tax"></span><span class="total-amount" id="taxAmount"></span></div>
+                            <div class="total-row grand-total"><span class="total-label" data-i18n-key="total"></span><span class="total-amount" id="totalAmount"></span></div>
                         </div>
                     </div>
                     
                     <div class="payment-link-wrapper" id="previewPaymentLinkWrapper" style="display: none;">
-                        <a href="#" target="_blank" class="payment-link-btn" id="previewPaymentLink" data-i18n-key="payNow">Pay Now</a>
+                        <a href="#" target="_blank" class="payment-link-btn" id="previewPaymentLink" data-i18n-key="payNow"></a>
                     </div>
 
-
-                    <div class="invoice-footer" id="invoiceFooter" style="display:none;">
-                        <h4 data-i18n-key="notes">Notes</h4>
-                        <p id="previewNotes"></p>
+                    <div class="invoice-footer">
+                        <div id="notesSection" style="display:none;">
+                            <h4 data-i18n-key="notes">Notes</h4>
+                            <p id="previewNotes"></p>
+                        </div>
+                        <div id="signatureSection" style="display:none;">
+                            <h4 data-i18n-key="signature">Signature</h4>
+                            <div class="signature-image-container">
+                                <img src="" alt="Signature" id="previewSignature">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,6 +226,7 @@
         Copyright © <span id="currentYear"></span> • Designed with ❤️ by <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a>
     </footer>
 
+    <script src="js/font.js" defer></script>
     <script src="js/translations.js" defer></script>
     <script src="js/text-processor.js" defer></script>
     <script src="js/app.js" defer></script>
