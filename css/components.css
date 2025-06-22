@@ -2,27 +2,16 @@
 
 /* Header Bar */
 .header-bar {
-    grid-column: 1 / -1;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
-    padding: 12px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
+    grid-column: 1 / -1; background: var(--bg-primary); border-bottom: 1px solid var(--border-color);
+    padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
 }
-.header-left, .header-right, .logo-section {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+.header-left, .header-right, .logo-section { display: flex; align-items: center; gap: 16px; }
 .logo-icon {
     width: 36px; height: 36px; background: var(--text-primary); border-radius: var(--radius-md);
     display: flex; align-items: center; justify-content: center; color: white;
     font-weight: 700; flex-shrink: 0;
 }
 .logo-text { font-size: 18px; font-weight: 600; white-space: nowrap; }
-
 .language-selector-wrapper { display: flex; align-items: center; gap: 8px; }
 .language-icon { width: 20px; height: 20px; color: var(--text-secondary); }
 .form-select-sm { padding: 8px 32px 8px 12px; font-size: 13px; background-position: right 8px center; }
@@ -54,6 +43,23 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 12px center; background-repeat: no-repeat; background-size: 16px; padding-right: 40px;
 }
+
+/* Image Upload Component */
+.image-upload-wrapper { display: flex; align-items: center; gap: 12px; }
+.image-preview {
+    width: 60px; height: 60px; border-radius: var(--radius-md);
+    border: 1px solid var(--border-color); object-fit: contain;
+    background-color: var(--bg-secondary); display: none;
+}
+.image-preview.signature-preview { background-color: white; }
+.image-upload-wrapper.has-image .image-preview { display: block; }
+.image-upload-wrapper.has-image .image-upload-input { display: none; }
+.image-upload-wrapper:not(.has-image) .btn-remove-image { display: none; }
+.btn-remove-image {
+    padding: 4px 8px; font-size: 12px; background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color); border-radius: var(--radius-sm); cursor: pointer;
+}
+.btn-remove-image:hover { background-color: var(--border-color); }
 
 /* Items Section */
 .items-header { display: grid; grid-template-columns: 1fr 60px 90px 32px; gap: 8px; margin-bottom: 8px; }
@@ -102,12 +108,17 @@
 .preview-content { flex: 1; padding: 32px; }
 .invoice-preview {
     max-width: 800px; margin: 0 auto; background: var(--bg-primary); border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg); padding: 48px 56px; min-height: 1000px; border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg); padding: 48px 56px; min-height: 1122px; border: 1px solid var(--border-light);
 }
-.invoice-header { display: flex; justify-content: space-between; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border-light); }
-.invoice-brand { display: flex; align-items: center; gap: 12px; }
-.invoice-logo { width: 32px; height: 32px; background: var(--text-primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
-.invoice-company-name { font-size: 16px; font-weight: 600; }
+.invoice-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border-light); }
+.invoice-brand { display: flex; align-items: center; gap: 16px; }
+.invoice-logo { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+#previewLogo { max-width: 100%; max-height: 100%; object-fit: contain; }
+.invoice-logo-text {
+    width: 100%; height: 100%; background: var(--text-primary); border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;
+}
+.invoice-company-name { font-size: 20px; font-weight: 600; }
 .invoice-meta { text-align: right; }
 .invoice-number { font-size: 24px; font-weight: 300; margin-bottom: 8px; }
 .invoice-dates { color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
@@ -117,13 +128,13 @@
 .address-info .name { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
 
 /* Invoice Table */
-.invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; }
+.invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; border-radius: var(--radius-md); overflow: hidden; }
 .invoice-table th { background: var(--bg-sidebar); padding: 16px 20px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border-color); }
 .invoice-table td { padding: 16px 20px; border-bottom: 1px solid var(--border-light); color: var(--text-primary); }
 .invoice-table tbody tr:last-child td { border-bottom: none; }
 .item-description { font-weight: 500; }
 
-/* Invoice Totals */
+/* Invoice Totals & Payment */
 .invoice-totals { display: flex; justify-content: flex-end; margin-bottom: 24px; }
 .totals-section { min-width: 280px; }
 .total-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
@@ -131,8 +142,6 @@
 .total-label { color: var(--text-secondary); }
 .total-amount { color: var(--text-primary); font-weight: 500; }
 .grand-total .total-amount { font-size: 18px; font-weight: 600; }
-
-/* Payment Link Button */
 .payment-link-wrapper { margin: 24px 0; text-align: right; }
 .payment-link-btn {
     display: inline-block; padding: 12px 24px; background-color: var(--accent-secondary); color: white !important;
@@ -140,10 +149,13 @@
 }
 .payment-link-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
-/* Footer Section */
+/* Invoice Footer */
 .invoice-footer { border-top: 1px solid var(--border-light); padding-top: 32px; margin-top: 48px; }
+#notesSection, #signatureSection { margin-bottom: 32px; }
 .invoice-footer h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
 .invoice-footer p { color: var(--text-secondary); line-height: 1.6; font-size: 14px; white-space: pre-wrap; }
+.signature-image-container { max-width: 200px; }
+#previewSignature { max-width: 100%; height: auto; }
 
 /* App Footer */
 .app-footer { text-align: center; padding: 12px; font-size: 13px; color: var(--text-muted); background-color: var(--bg-sidebar); }
@@ -153,7 +165,7 @@
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
     .preview-content { padding: 16px; }
-    .invoice-preview { padding: 24px; }
+    .invoice-preview { padding: 24px; min-height: 0; }
     .invoice-header { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 24px; padding-bottom: 24px; }
     .invoice-meta { text-align: left; }
     .invoice-table th, .invoice-table td { padding: 10px; font-size: 12px; }
