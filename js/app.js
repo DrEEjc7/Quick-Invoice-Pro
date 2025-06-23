@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  new InvoiceApp(i18n, registerNormalFont)
+  new InvoiceApp()
 })
 
 class InvoiceApp {
-  constructor(i18n, registerFont) {
-    this.i18n = i18n
-    this.registerFont = registerFont
+  constructor() {
     this.state = {}
-    this.storageKey = "invoiceData-v3"
-
+    this.storageKey = "invoiceData-v4"
+    
     this.initialState = {
       language: "en",
       companyName: "Your Company LLC",
-      companyEmail: "hello@yourcompany.com",
+      companyEmail: "hello@yourcompany.com", 
       companyInfo: "456 Your Street\nYour City, ST 12345\nPhone: (555) 123-4567",
       companyLogo: null,
       clientName: "Client Inc.",
@@ -21,14 +19,14 @@ class InvoiceApp {
       invoiceNumber: "INV-001",
       invoiceStatus: "draft",
       currency: "USD",
-      invoiceDate: Processor.getTodayDate(),
-      dueDate: Processor.getDueDateDefault(),
+      invoiceDate: this.getTodayDate(),
+      dueDate: this.getDueDateDefault(),
       items: [{ description: "Premium Web Development", quantity: 10, rate: 150.0 }],
       discount: "0",
       taxRate: 10,
       paymentLink: "",
-      notes: "",
-      signatureImage: null,
+      notes: "Thank you for your business!",
+      signatureImage: null
     }
 
     this.init()
@@ -44,6 +42,16 @@ class InvoiceApp {
     document.getElementById("currentYear").textContent = new Date().getFullYear()
   }
 
+  getTodayDate() {
+    return new Date().toISOString().split('T')[0]
+  }
+
+  getDueDateDefault() {
+    const date = new Date()
+    date.setDate(date.getDate() + 30)
+    return date.toISOString().split('T')[0]
+  }
+
   bindEvents() {
     const sidebar = document.querySelector(".sidebar")
     sidebar.addEventListener("input", (e) => {
@@ -57,34 +65,38 @@ class InvoiceApp {
       }
     })
 
+    // Image upload handlers
     document.getElementById("logoUpload").addEventListener("change", (e) => this.handleImageUpload(e, "companyLogo"))
-    document
-      .getElementById("signatureUpload")
-      .addEventListener("change", (e) => this.handleImageUpload(e, "signatureImage"))
+    document.getElementById("signatureUpload").addEventListener("change", (e) => this.handleImageUpload(e, "signatureImage"))
     document.getElementById("removeLogoBtn").addEventListener("click", () => this.removeImage("companyLogo"))
     document.getElementById("removeSignatureBtn").addEventListener("click", () => this.removeImage("signatureImage"))
-    document
-      .getElementById("changeLogoBtn")
-      .addEventListener("click", () => document.getElementById("logoUpload").click())
-    document
-      .getElementById("changeSignatureBtn")
-      .addEventListener("click", () => document.getElementById("signatureUpload").click())
+    document.getElementById("changeLogoBtn").addEventListener("click", () => document.getElementById("logoUpload").click())
+    document.getElementById("changeSignatureBtn").addEventListener("click", () => document.getElementById("signatureUpload").click())
 
+    // Items handling
     const itemsContainer = document.getElementById("itemsContainer")
     itemsContainer.addEventListener("input", (e) => {
       if (e.target.classList.contains("item-input")) {
-        const index = e.target.dataset.index
+        const index = parseInt(e.target.dataset.index)
         const field = e.target.dataset.field
-        this.state.items[index][field] = e.target.value
+        
+        let value = e.target.value
+        if (field === 'quantity' || field === 'rate') {
+          value = parseFloat(value) || 0
+        }
+        
+        this.state.items[index][field] = value
         this.updatePreview()
         this.saveToStorage()
       }
     })
+    
     itemsContainer.addEventListener("click", (e) => {
       const removeBtn = e.target.closest(".remove-item-btn")
-      if (removeBtn) this.removeItem(removeBtn.dataset.index)
+      if (removeBtn) this.removeItem(parseInt(removeBtn.dataset.index))
     })
 
+    // Button handlers
     document.getElementById("languageSelector").addEventListener("change", (e) => this.setLanguage(e.target.value))
     document.getElementById("addItemBtn").addEventListener("click", () => this.addItem())
     document.getElementById("downloadBtn").addEventListener("click", () => this.downloadPDF())
@@ -95,11 +107,9 @@ class InvoiceApp {
   loadFromStorage() {
     const savedData = localStorage.getItem(this.storageKey)
     this.state = savedData ? { ...this.initialState, ...JSON.parse(savedData) } : { ...this.initialState }
-    if (!this.state.notes) {
-      this.state.notes = this.i18n[this.state.language || "en"].notesPlaceholder
-    }
+    
     if (!Array.isArray(this.state.items) || this.state.items.length === 0) {
-      this.state.items = [{ description: "", quantity: 1, rate: 0 }]
+      this.state.items = [{ description: "Premium Web Development", quantity: 1, rate: 150 }]
     }
   }
 
@@ -108,7 +118,7 @@ class InvoiceApp {
   }
 
   resetForm() {
-    const t = this.i18n[this.state.language] || this.i18n["en"]
+    const t = i18n[this.state.language] || i18n["en"]
     if (confirm(t.resetConfirmation || "Are you sure you want to reset the form? All data will be lost.")) {
       const currentLang = this.state.language
       localStorage.removeItem(this.storageKey)
@@ -123,10 +133,12 @@ class InvoiceApp {
   handleImageUpload(event, stateKey) {
     const file = event.target.files[0]
     if (!file) return
+    
     if (file.size > 2 * 1024 * 1024) {
       alert("File is too large. Please select an image smaller than 2MB.")
       return
     }
+    
     const reader = new FileReader()
     reader.onload = (e) => {
       this.state[stateKey] = e.target.result
@@ -145,10 +157,11 @@ class InvoiceApp {
   populateLanguageSelector() {
     const selector = document.getElementById("languageSelector")
     selector.innerHTML = ""
-    for (const langCode in this.i18n) {
+    
+    for (const langCode in i18n) {
       const option = document.createElement("option")
       option.value = langCode
-      option.textContent = this.i18n[langCode].langName
+      option.textContent = i18n[langCode].langName
       selector.appendChild(option)
     }
     selector.value = this.state.language
@@ -157,28 +170,39 @@ class InvoiceApp {
   setLanguage(langCode, isInitialization = false) {
     this.state.language = langCode
     document.documentElement.lang = langCode
+    
     if (!isInitialization) {
       this.saveToStorage()
     }
+    
     this.applyTranslations()
     this.updatePreview()
   }
 
   applyTranslations() {
     const lang = this.state.language
-    const translations = this.i18n[lang]
-    const fallback = this.i18n["en"]
+    const translations = i18n[lang] || i18n["en"]
+    
+    // Apply translations to elements with data-i18n-key
     document.querySelectorAll("[data-i18n-key]").forEach((el) => {
       const key = el.dataset.i18nKey
+      const text = translations[key] || key
+      
       if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-        el.placeholder = translations[key] || fallback[key]
+        if (el.type !== "file" && el.type !== "date" && el.type !== "number") {
+          el.placeholder = text
+        }
+      } else if (el.tagName === "OPTION") {
+        el.textContent = text
       } else {
-        el.textContent = translations[key] || fallback[key]
+        el.textContent = text
       }
     })
+
+    // Apply placeholder translations
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
       const key = el.dataset.i18nPlaceholder
-      el.placeholder = translations[key] || fallback[key]
+      el.placeholder = translations[key] || key
     })
   }
 
@@ -195,39 +219,43 @@ class InvoiceApp {
   renderItems() {
     const container = document.getElementById("itemsContainer")
     container.innerHTML = ""
-    const t = this.i18n[this.state.language] || this.i18n["en"]
+    const t = i18n[this.state.language] || i18n["en"]
+    
     this.state.items.forEach((item, index) => {
       const itemRow = document.createElement("div")
       itemRow.className = "item-row"
       itemRow.innerHTML = `
-                <input type="text" class="item-input" data-index="${index}" data-field="description" value="${item.description}" placeholder="${t.description}...">
-                <input type="number" class="item-input" data-index="${index}" data-field="quantity" value="${item.quantity}" min="0">
-                <input type="number" class="item-input" data-index="${index}" data-field="rate" value="${item.rate}" min="0" step="0.01">
-                <button type="button" class="remove-item-btn" data-index="${index}" title="Remove Item">&times;</button>
-            `
+        <input type="text" class="item-input" data-index="${index}" data-field="description" 
+               value="${item.description || ''}" placeholder="${t.description || 'Description'}...">
+        <input type="number" class="item-input" data-index="${index}" data-field="quantity" 
+               value="${item.quantity || 1}" min="0" step="1">
+        <input type="number" class="item-input" data-index="${index}" data-field="rate" 
+               value="${item.rate || 0}" min="0" step="0.01">
+        <button type="button" class="remove-item-btn" data-index="${index}" title="Remove Item">&times;</button>
+      `
       container.appendChild(itemRow)
     })
   }
 
   updatePreview() {
-    const t = this.i18n[this.state.language] || this.i18n["en"]
+    const t = i18n[this.state.language] || i18n["en"]
 
     // Update company info
-    document.getElementById("previewCompanyName").textContent = this.state.companyName
-    document.getElementById("previewCompanyEmail").textContent = this.state.companyEmail
-    document.getElementById("previewCompanyInfo").innerHTML = this.state.companyInfo.replace(/\n/g, "<br>")
+    document.getElementById("previewCompanyName").textContent = this.state.companyName || t.companyNamePlaceholder
+    document.getElementById("previewCompanyEmail").textContent = this.state.companyEmail || ""
+    document.getElementById("previewCompanyInfo").innerHTML = (this.state.companyInfo || "").replace(/\n/g, "<br>")
 
-    // Update client info
-    document.getElementById("previewClientName").textContent = this.state.clientName
-    document.getElementById("previewClientEmail").textContent = this.state.clientEmail
-    document.getElementById("previewClientInfo").innerHTML = this.state.clientInfo.replace(/\n/g, "<br>")
+    // Update client info  
+    document.getElementById("previewClientName").textContent = this.state.clientName || t.clientNamePlaceholder
+    document.getElementById("previewClientEmail").textContent = this.state.clientEmail || ""
+    document.getElementById("previewClientInfo").innerHTML = (this.state.clientInfo || "").replace(/\n/g, "<br>")
 
     // Update invoice meta
-    document.getElementById("previewInvoiceNumber").textContent = `#${this.state.invoiceNumber}`
-    document.getElementById("previewInvoiceDate").innerHTML =
-      `<strong>${t.issueDate}:</strong> ${Processor.formatDate(this.state.invoiceDate)}`
-    document.getElementById("previewDueDate").innerHTML =
-      `<strong>${t.dueDate}:</strong> ${Processor.formatDate(this.state.dueDate)}`
+    document.getElementById("previewInvoiceNumber").textContent = `#${this.state.invoiceNumber || 'INV-001'}`
+    document.getElementById("previewInvoiceDate").innerHTML = 
+      `<strong>${t.issueDate || 'Issue Date'}:</strong> ${this.formatDate(this.state.invoiceDate)}`
+    document.getElementById("previewDueDate").innerHTML = 
+      `<strong>${t.dueDate || 'Due Date'}:</strong> ${this.formatDate(this.state.dueDate)}`
 
     // Update status
     const statusBadge = document.getElementById("previewStatus")
@@ -236,40 +264,100 @@ class InvoiceApp {
     statusBadge.className = `status-badge status-${this.state.invoiceStatus}`
 
     // Update table
-    document.getElementById("invoiceTableHeader").innerHTML = `
-            <tr><th>${t.description}</th><th class="text-center">${t.qty}</th><th class="text-right">${t.price}</th><th class="text-right">${t.pdfAmount}</th></tr>`
+    this.updateTable(t)
+    
+    // Update totals
+    this.updateTotals(t)
+
+    // Update payment link
+    this.updatePaymentLink()
+
+    // Update notes
+    this.updateNotes()
+
+    // Update images
+    this.updateImages()
+  }
+
+  updateTable(t) {
+    const tableHeader = document.getElementById("invoiceTableHeader")
+    tableHeader.innerHTML = `
+      <tr>
+        <th>${t.description || 'Description'}</th>
+        <th class="text-center">${t.qty || 'Qty'}</th>
+        <th class="text-right">${t.price || 'Price'}</th>
+        <th class="text-right">${t.pdfAmount || 'Amount'}</th>
+      </tr>
+    `
 
     const tableBody = document.getElementById("invoiceTableBody")
     tableBody.innerHTML = ""
+    
     this.state.items.forEach((item) => {
-      const amount = (Number.parseFloat(item.quantity) || 0) * (Number.parseFloat(item.rate) || 0)
-      tableBody.insertRow().innerHTML = `
-                <td class="item-description">${item.description || ""}</td><td class="text-center">${item.quantity || 0}</td>
-                <td class="text-right">${Processor.formatCurrency(item.rate || 0, this.state.currency)}</td><td class="text-right">${Processor.formatCurrency(amount, this.state.currency)}</td>`
+      const quantity = parseFloat(item.quantity) || 0
+      const rate = parseFloat(item.rate) || 0
+      const amount = quantity * rate
+      
+      const row = tableBody.insertRow()
+      row.innerHTML = `
+        <td class="item-description">${item.description || ""}</td>
+        <td class="text-center">${quantity}</td>
+        <td class="text-right">${this.formatCurrency(rate)}</td>
+        <td class="text-right">${this.formatCurrency(amount)}</td>
+      `
     })
+  }
 
+  updateTotals(t) {
     const totals = this.calculateTotals()
-    document.getElementById("subtotalAmount").textContent = Processor.formatCurrency(
-      totals.subtotal,
-      this.state.currency,
-    )
-    document.getElementById("totalAmount").textContent = Processor.formatCurrency(totals.total, this.state.currency)
-    this.toggleRow("discountRow", "discountAmount", totals.discount, `-`)
-    this.toggleRow("taxRow", "taxAmount", totals.tax)
+    
+    document.getElementById("subtotalAmount").textContent = this.formatCurrency(totals.subtotal)
+    document.getElementById("totalAmount").textContent = this.formatCurrency(totals.total)
+    
+    // Show/hide discount row
+    const discountRow = document.getElementById("discountRow")
+    if (totals.discount > 0) {
+      discountRow.style.display = "flex"
+      document.getElementById("discountAmount").textContent = `-${this.formatCurrency(totals.discount)}`
+    } else {
+      discountRow.style.display = "none"
+    }
+    
+    // Show/hide tax row
+    const taxRow = document.getElementById("taxRow")
+    if (totals.tax > 0) {
+      taxRow.style.display = "flex"
+      document.getElementById("taxAmount").textContent = this.formatCurrency(totals.tax)
+    } else {
+      taxRow.style.display = "none"
+    }
+  }
 
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i
-    this.toggleElement(
-      "previewPaymentLinkWrapper",
-      this.state.paymentLink && urlRegex.test(this.state.paymentLink),
-      (el) => {
-        document.getElementById("previewPaymentLink").href = this.state.paymentLink
-      },
-    )
+  updatePaymentLink() {
+    const paymentWrapper = document.getElementById("previewPaymentLinkWrapper")
+    const paymentLink = document.getElementById("previewPaymentLink")
+    
+    if (this.state.paymentLink && this.isValidUrl(this.state.paymentLink)) {
+      paymentWrapper.style.display = "block"
+      paymentLink.href = this.state.paymentLink
+    } else {
+      paymentWrapper.style.display = "none"
+    }
+  }
 
-    this.toggleElement("notesSection", this.state.notes.trim(), (el) => {
-      document.getElementById("previewNotes").textContent = this.state.notes
-    })
+  updateNotes() {
+    const notesSection = document.getElementById("notesSection")
+    const notesText = document.getElementById("previewNotes")
+    
+    if (this.state.notes && this.state.notes.trim()) {
+      notesSection.style.display = "block"
+      notesText.textContent = this.state.notes
+    } else {
+      notesSection.style.display = "none"
+    }
+  }
 
+  updateImages() {
     // Update logo
     const logoContainer = document.getElementById("logoUploadContainer")
     const logoPreview = document.getElementById("logoPreview")
@@ -283,50 +371,26 @@ class InvoiceApp {
       previewLogoImg.style.display = "block"
       previewLogoText.style.display = "none"
     } else {
-      logoPreview.src = ""
       logoContainer.classList.remove("has-image")
       previewLogoImg.style.display = "none"
       previewLogoText.style.display = "flex"
-      previewLogoText.textContent = this.state.companyName.substring(0, 3).toUpperCase()
+      previewLogoText.textContent = (this.state.companyName || "QIP").substring(0, 3).toUpperCase()
     }
 
     // Update signature
     const signatureContainer = document.getElementById("signatureUploadContainer")
     const signaturePreview = document.getElementById("signaturePreview")
+    const signatureSection = document.getElementById("signatureSection")
+    const previewSignature = document.getElementById("previewSignature")
 
-    this.toggleElement(
-      "signatureSection",
-      this.state.signatureImage,
-      (el) => {
-        signaturePreview.src = this.state.signatureImage
-        signatureContainer.classList.add("has-image")
-        document.getElementById("previewSignature").src = this.state.signatureImage
-      },
-      () => {
-        signaturePreview.src = ""
-        signatureContainer.classList.remove("has-image")
-      },
-    )
-  }
-
-  toggleRow(rowId, amountId, value, prefix = "") {
-    const row = document.getElementById(rowId)
-    if (value > 0) {
-      row.style.display = "flex"
-      document.getElementById(amountId).textContent = `${prefix}${Processor.formatCurrency(value, this.state.currency)}`
+    if (this.state.signatureImage) {
+      signatureContainer.classList.add("has-image")
+      signaturePreview.src = this.state.signatureImage
+      signatureSection.style.display = "block"
+      previewSignature.src = this.state.signatureImage
     } else {
-      row.style.display = "none"
-    }
-  }
-
-  toggleElement(elementId, condition, onTrue, onFalse) {
-    const el = document.getElementById(elementId)
-    if (condition) {
-      el.style.display = "block"
-      if (onTrue) onTrue(el)
-    } else {
-      el.style.display = "none"
-      if (onFalse) onFalse(el)
+      signatureContainer.classList.remove("has-image")
+      signatureSection.style.display = "none"
     }
   }
 
@@ -347,20 +411,75 @@ class InvoiceApp {
   }
 
   calculateTotals() {
-    const subtotal = this.state.items.reduce(
-      (sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.rate) || 0),
-      0,
-    )
-    const discountAmount = Processor.parseDiscount(this.state.discount, subtotal)
+    const subtotal = this.state.items.reduce((sum, item) => {
+      const quantity = parseFloat(item.quantity) || 0
+      const rate = parseFloat(item.rate) || 0
+      return sum + (quantity * rate)
+    }, 0)
+
+    const discountAmount = this.parseDiscount(this.state.discount, subtotal)
     const subtotalAfterDiscount = subtotal - discountAmount
-    const taxAmount = (subtotalAfterDiscount * (Number(this.state.taxRate) || 0)) / 100
+    const taxAmount = (subtotalAfterDiscount * (parseFloat(this.state.taxRate) || 0)) / 100
     const total = subtotalAfterDiscount + taxAmount
-    return { subtotal, discount: discountAmount, tax: taxAmount, total }
+
+    return { 
+      subtotal, 
+      discount: discountAmount, 
+      tax: taxAmount, 
+      total 
+    }
+  }
+
+  parseDiscount(discount, subtotal) {
+    if (!discount || subtotal <= 0) return 0
+    
+    const input = String(discount).trim()
+    if (input.includes('%')) {
+      const percentage = parseFloat(input.replace(/[^0-9.]/g, ''))
+      return isNaN(percentage) ? 0 : (subtotal * percentage) / 100
+    } else {
+      const amount = parseFloat(input.replace(/[^0-9.]/g, ''))
+      return isNaN(amount) ? 0 : amount
+    }
+  }
+
+  formatCurrency(amount) {
+    const currencySymbols = {
+      USD: '$', EUR: '€', GBP: '£', CAD: 'C$', 
+      JPY: '¥', CNY: '¥', INR: '₹'
+    }
+    
+    const symbol = currencySymbols[this.state.currency] || '$'
+    const value = Number(amount).toFixed(2)
+    return `${symbol}${value}`
+  }
+
+  formatDate(dateString) {
+    if (!dateString) return ''
+    
+    const date = new Date(dateString)
+    const userTimezoneOffset = date.getTimezoneOffset() * 60000
+    const correctedDate = new Date(date.getTime() + userTimezoneOffset)
+    
+    return correctedDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long', 
+      day: 'numeric'
+    })
+  }
+
+  isValidUrl(string) {
+    try {
+      new URL(string)
+      return true
+    } catch (_) {
+      return false
+    }
   }
 
   validateForm() {
     const clientNameInput = document.getElementById("clientName")
-    if (!this.state.clientName.trim()) {
+    if (!this.state.clientName || !this.state.clientName.trim()) {
       clientNameInput.classList.add("form-input-error")
       clientNameInput.focus()
       return false
@@ -375,92 +494,120 @@ class InvoiceApp {
   }
 
   async createPDF() {
-    if (!this.validateForm()) return
+    if (!this.validateForm()) return null
+
     const { jsPDF } = window.jspdf
     const doc = new jsPDF()
-    this.registerFont(doc) // Apply custom font for Unicode support
-    const t = this.i18n[this.state.language] || this.i18n["en"]
+    
+    // Use Inter font for better Unicode support
+    doc.setFont("helvetica")
+    
+    const t = i18n[this.state.language] || i18n["en"]
     const pageWidth = doc.internal.pageSize.getWidth()
     const totals = this.calculateTotals()
     let finalY
 
-    // Header with status
+    // Header with logo and company info
     if (this.state.companyLogo) {
       try {
-        const imgType = this.state.companyLogo.split(";")[0].split("/")[1].toUpperCase()
+        const imgType = this.state.companyLogo.split(';')[0].split('/')[1].toUpperCase()
         doc.addImage(this.state.companyLogo, imgType, 15, 15, 30, 15)
         doc.setFontSize(18)
         doc.setFont(undefined, "bold")
-        doc.text(this.state.companyName, 50, 25)
+        doc.text(this.state.companyName || "", 50, 25)
       } catch (e) {
-        console.error("Error adding logo to PDF:", e)
+        console.error("Error adding logo:", e)
+        doc.setFontSize(20)
+        doc.setFont(undefined, "bold")
+        doc.text(this.state.companyName || "", 20, 25)
       }
     } else {
       doc.setFontSize(20)
       doc.setFont(undefined, "bold")
-      doc.text(this.state.companyName, 20, 25)
+      doc.text(this.state.companyName || "", 20, 25)
     }
 
-    // Status badge
+    // Status and invoice number
     const statusKey = `status${this.state.invoiceStatus.charAt(0).toUpperCase() + this.state.invoiceStatus.slice(1)}`
-    const statusText = t[statusKey] || this.state.invoiceStatus.toUpperCase()
+    const statusText = (t[statusKey] || this.state.invoiceStatus).toUpperCase()
+    
     doc.setFontSize(10)
     doc.setFont(undefined, "bold")
     doc.text(statusText, pageWidth - 20, 15, { align: "right" })
 
     doc.setFontSize(22)
-    doc.setFont(undefined, "bold")
-    doc.text(t.pdfInvoice.toUpperCase(), pageWidth - 20, 25, { align: "right" })
+    doc.text((t.pdfInvoice || "INVOICE").toUpperCase(), pageWidth - 20, 25, { align: "right" })
+    
     doc.setFontSize(10)
     doc.setFont(undefined, "normal")
-    doc.text(`#${this.state.invoiceNumber}`, pageWidth - 20, 32, { align: "right" })
+    doc.text(`#${this.state.invoiceNumber || 'INV-001'}`, pageWidth - 20, 32, { align: "right" })
 
     doc.line(15, 45, pageWidth - 15, 45)
 
-    // Billing Info & Dates
+    // Billing information and dates
     const yPos = 55
     doc.setFontSize(10)
     doc.setFont(undefined, "bold")
     doc.setTextColor(100)
-    doc.text(t.pdfBillTo.toUpperCase(), 20, yPos)
-    doc.text(t.pdfDateIssued.toUpperCase(), pageWidth / 2, yPos)
-    doc.text(t.pdfDueDate.toUpperCase(), pageWidth / 1.5, yPos)
+    doc.text((t.pdfBillTo || "BILL TO").toUpperCase(), 20, yPos)
+    doc.text((t.pdfDateIssued || "DATE ISSUED").toUpperCase(), pageWidth / 2, yPos)
+    doc.text((t.pdfDueDate || "DUE DATE").toUpperCase(), pageWidth / 1.5, yPos)
 
     doc.setTextColor(0)
     doc.setFont(undefined, "normal")
 
-    // Client info
-    doc.text(this.state.clientName, 20, yPos + 7)
+    // Client information
+    let clientY = yPos + 7
+    doc.text(this.state.clientName || "", 20, clientY)
+    
     if (this.state.clientEmail) {
-      doc.text(this.state.clientEmail, 20, yPos + 12)
-      doc.text(this.state.clientInfo, 20, yPos + 17)
-    } else {
-      doc.text(this.state.clientInfo, 20, yPos + 12)
+      clientY += 5
+      doc.text(this.state.clientEmail, 20, clientY)
+    }
+    
+    if (this.state.clientInfo) {
+      clientY += 5
+      const clientInfoLines = this.state.clientInfo.split('\n')
+      clientInfoLines.forEach((line, index) => {
+        doc.text(line, 20, clientY + (index * 5))
+      })
     }
 
-    doc.text(Processor.formatDate(this.state.invoiceDate), pageWidth / 2, yPos + 7)
-    doc.text(Processor.formatDate(this.state.dueDate), pageWidth / 1.5, yPos + 7)
+    // Dates
+    doc.text(this.formatDate(this.state.invoiceDate), pageWidth / 2, yPos + 7)
+    doc.text(this.formatDate(this.state.dueDate), pageWidth / 1.5, yPos + 7)
 
-    // Items Table
+    // Items table
     const tableBody = this.state.items.map((item) => [
-      item.description,
-      item.quantity,
-      Processor.formatCurrency(item.rate, this.state.currency),
-      Processor.formatCurrency(item.quantity * item.rate, this.state.currency),
+      item.description || "",
+      String(item.quantity || 0),
+      this.formatCurrency(item.rate || 0),
+      this.formatCurrency((item.quantity || 0) * (item.rate || 0))
     ])
 
     doc.autoTable({
-      head: [[t.pdfDescription, t.pdfQuantity, t.pdfUnitPrice, t.pdfAmount]],
+      head: [[
+        t.pdfDescription || "Description",
+        t.pdfQuantity || "Quantity", 
+        t.pdfUnitPrice || "Unit Price",
+        t.pdfAmount || "Amount"
+      ]],
       body: tableBody,
-      startY: yPos + 30,
+      startY: yPos + 35,
       theme: "striped",
-      headStyles: { fillColor: [22, 34, 57], font: "NotoSans", fontStyle: "bold" },
-      bodyStyles: { font: "NotoSans" },
-      styles: { font: "NotoSans" },
+      headStyles: { 
+        fillColor: [22, 34, 57],
+        fontStyle: "bold"
+      },
+      styles: {
+        font: "helvetica",
+        fontSize: 9
+      }
     })
+
     finalY = doc.autoTable.previous.finalY
 
-    // Totals
+    // Totals section
     const addTotalRow = (label, value, isBold = false) => {
       finalY += isBold ? 8 : 6
       doc.setFontSize(isBold ? 12 : 10)
@@ -468,43 +615,60 @@ class InvoiceApp {
       doc.text(label, pageWidth - 80, finalY, { align: "right" })
       doc.text(value, pageWidth - 20, finalY, { align: "right" })
     }
-    addTotalRow(t.pdfSubtotal, Processor.formatCurrency(totals.subtotal, this.state.currency))
-    if (totals.discount > 0)
-      addTotalRow(t.pdfDiscount, `-${Processor.formatCurrency(totals.discount, this.state.currency)}`)
-    if (totals.tax > 0)
-      addTotalRow(t.pdfTax, `${Processor.formatCurrency(totals.tax, this.state.currency)} (${this.state.taxRate}%)`)
+
+    addTotalRow(t.pdfSubtotal || "Subtotal", this.formatCurrency(totals.subtotal))
+    
+    if (totals.discount > 0) {
+      addTotalRow(t.pdfDiscount || "Discount", `-${this.formatCurrency(totals.discount)}`)
+    }
+    
+    if (totals.tax > 0) {
+      addTotalRow(
+        t.pdfTax || "Tax", 
+        `${this.formatCurrency(totals.tax)} (${this.state.taxRate}%)`
+      )
+    }
+
     finalY += 2
     doc.line(pageWidth - 85, finalY, pageWidth - 15, finalY)
-    addTotalRow(t.pdfTotal, Processor.formatCurrency(totals.total, this.state.currency), true)
+    addTotalRow(t.pdfTotal || "Total", this.formatCurrency(totals.total), true)
 
-    // Footer Section
-    let footerY = 240
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i
-    if (this.state.paymentLink && urlRegex.test(this.state.paymentLink)) {
+    // Footer section
+    let footerY = Math.max(finalY + 20, 240)
+
+    // Payment link
+    if (this.state.paymentLink && this.isValidUrl(this.state.paymentLink)) {
       doc.setFontSize(11)
       doc.setTextColor(47, 128, 237)
-      doc.textWithLink(t.pdfPayOnline, 20, footerY, { url: this.state.paymentLink })
+      doc.textWithLink(t.pdfPayOnline || "Pay Online", 20, footerY, { 
+        url: this.state.paymentLink 
+      })
       doc.setTextColor(0)
       footerY += 10
     }
 
-    if (this.state.notes) {
+    // Notes
+    if (this.state.notes && this.state.notes.trim()) {
       doc.setFont(undefined, "bold")
       doc.setFontSize(10)
-      doc.text(t.pdfNotes, 20, footerY)
+      doc.text(t.pdfNotes || "Notes", 20, footerY)
       doc.setFont(undefined, "normal")
-      doc.text(this.state.notes, 20, footerY + 5, { maxWidth: pageWidth / 2 - 30 })
+      
+      const noteLines = doc.splitTextToSize(this.state.notes, pageWidth / 2 - 30)
+      doc.text(noteLines, 20, footerY + 5)
+      footerY += (noteLines.length * 5) + 10
     }
 
+    // Signature
     if (this.state.signatureImage) {
       try {
-        const imgType = this.state.signatureImage.split(";")[0].split("/")[1].toUpperCase()
+        const imgType = this.state.signatureImage.split(';')[0].split('/')[1].toUpperCase()
         doc.setFont(undefined, "bold")
-        doc.text(t.pdfSignature, pageWidth / 2, footerY)
+        doc.text(t.pdfSignature || "Signature", pageWidth / 2, footerY)
         doc.addImage(this.state.signatureImage, imgType, pageWidth / 2, footerY + 5, 50, 20)
         doc.line(pageWidth / 2, footerY + 27, pageWidth / 2 + 60, footerY + 27)
       } catch (e) {
-        console.error("Error adding signature to PDF:", e)
+        console.error("Error adding signature:", e)
       }
     }
 
@@ -514,11 +678,15 @@ class InvoiceApp {
   async downloadPDF() {
     const btn = document.getElementById("downloadBtn")
     this.setButtonLoading(btn, true)
+    
     try {
       const doc = await this.createPDF()
-      if (doc) doc.save(`Invoice-${this.state.invoiceNumber}.pdf`)
+      if (doc) {
+        doc.save(`Invoice-${this.state.invoiceNumber || 'INV-001'}.pdf`)
+      }
     } catch (error) {
       console.error("PDF generation failed:", error)
+      alert("PDF generation failed. Please try again.")
     } finally {
       this.setButtonLoading(btn, false)
     }
@@ -527,6 +695,7 @@ class InvoiceApp {
   async printInvoice() {
     const btn = document.getElementById("printBtn")
     this.setButtonLoading(btn, true)
+    
     try {
       const doc = await this.createPDF()
       if (doc) {
@@ -535,153 +704,9 @@ class InvoiceApp {
       }
     } catch (error) {
       console.error("Print failed:", error)
+      alert("Print failed. Please try again.")
     } finally {
       this.setButtonLoading(btn, false)
     }
   }
-}
-
-const i18n = {
-  en: {
-    langName: "English",
-    companyName: "Your Company LLC",
-    companyEmail: "hello@yourcompany.com",
-    companyInfo: "456 Your Street\nYour City, ST 12345\nPhone: (555) 123-4567",
-    clientName: "Client Inc.",
-    clientEmail: "client@example.com",
-    clientInfo: "123 Main Street\nAnytown, USA 54321\nPhone: (555) 987-6543",
-    invoiceNumber: "INV-001",
-    invoiceStatus: "draft",
-    issueDate: "Issue Date",
-    dueDate: "Due Date",
-    description: "Description",
-    qty: "Qty",
-    price: "Price",
-    amount: "Amount",
-    discount: "Discount",
-    tax: "Tax",
-    total: "Total",
-    notesPlaceholder: "Enter any notes or special instructions here...",
-    statusDraft: "Draft",
-    statusPaid: "Paid",
-    statusUnpaid: "Unpaid",
-    addItem: "Add Item",
-    download: "Download PDF",
-    print: "Print",
-    reset: "Reset",
-    resetConfirmation: "Are you sure you want to reset the form? All data will be lost.",
-    pdfInvoice: "Invoice",
-    pdfBillTo: "Bill To",
-    pdfDateIssued: "Date Issued",
-    pdfDueDate: "Due Date",
-    pdfDescription: "Description",
-    pdfQuantity: "Quantity",
-    pdfUnitPrice: "Unit Price",
-    pdfAmount: "Amount",
-    pdfSubtotal: "Subtotal",
-    pdfDiscount: "Discount",
-    pdfTax: "Tax",
-    pdfTotal: "Total",
-    pdfPayOnline: "Pay Online",
-    pdfNotes: "Notes",
-    pdfSignature: "Signature",
-    pdfAmount: "Amount",
-  },
-  es: {
-    langName: "Español",
-    companyName: "Su Compañía LLC",
-    companyEmail: "hola@sucompania.com",
-    companyInfo: "456 Su Calle\nSu Ciudad, ST 12345\nTeléfono: (555) 123-4567",
-    clientName: "Cliente Inc.",
-    clientEmail: "cliente@ejemplo.com",
-    clientInfo: "123 Calle Principal\nCualquier Ciudad, USA 54321\nTeléfono: (555) 987-6543",
-    invoiceNumber: "INV-001",
-    invoiceStatus: "borrador",
-    issueDate: "Fecha de Emisión",
-    dueDate: "Fecha de Vencimiento",
-    description: "Descripción",
-    qty: "Cant",
-    price: "Precio",
-    amount: "Importe",
-    discount: "Descuento",
-    tax: "Impuesto",
-    total: "Total",
-    notesPlaceholder: "Ingrese cualquier nota o instrucción especial aquí...",
-    statusDraft: "Borrador",
-    statusPaid: "Pagado",
-    statusUnpaid: "No Pagado",
-    addItem: "Agregar Artículo",
-    download: "Descargar PDF",
-    print: "Imprimir",
-    reset: "Restablecer",
-    resetConfirmation: "¿Está seguro de que desea restablecer el formulario? Se perderán todos los datos.",
-    pdfInvoice: "Factura",
-    pdfBillTo: "Facturar A",
-    pdfDateIssued: "Fecha de Emisión",
-    pdfDueDate: "Fecha de Vencimiento",
-    pdfDescription: "Descripción",
-    pdfQuantity: "Cantidad",
-    pdfUnitPrice: "Precio Unitario",
-    pdfAmount: "Importe",
-    pdfSubtotal: "Subtotal",
-    pdfDiscount: "Descuento",
-    pdfTax: "Impuesto",
-    pdfTotal: "Total",
-    pdfPayOnline: "Pagar En Línea",
-    pdfNotes: "Notas",
-    pdfSignature: "Firma",
-    pdfAmount: "Importe",
-  },
-}
-
-const registerNormalFont = (doc) => {
-  doc.addFont("NotoSans-Regular.ttf", "NotoSans", "normal")
-  doc.addFont("NotoSans-Bold.ttf", "NotoSans", "bold")
-}
-
-const Processor = {
-  formatCurrency: (amount, currency) => {
-    const numberFormat = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency,
-      minimumFractionDigits: 2,
-    })
-    return numberFormat.format(amount)
-  },
-  formatDate: (dateString) => {
-    const date = new Date(dateString)
-    const options = { year: "numeric", month: "long", day: "numeric" }
-    return date.toLocaleDateString(undefined, options)
-  },
-  getTodayDate: () => {
-    const today = new Date()
-    const year = today.getFullYear()
-    let month = today.getMonth() + 1
-    let day = today.getDate()
-
-    month = month < 10 ? "0" + month : month
-    day = day < 10 ? "0" + day : day
-
-    return `${year}-${month}-${day}`
-  },
-  getDueDateDefault: () => {
-    const today = new Date()
-    const dueDate = new Date(today.setDate(today.getDate() + 30))
-    const year = dueDate.getFullYear()
-    let month = dueDate.getMonth() + 1
-    let day = dueDate.getDate()
-
-    month = month < 10 ? "0" + month : month
-    day = day < 10 ? "0" + day : day
-
-    return `${year}-${month}-${day}`
-  },
-  parseDiscount: (discount, subtotal) => {
-    if (discount.includes("%")) {
-      const percentage = Number.parseFloat(discount)
-      return (percentage / 100) * subtotal
-    } else {
-      return Number.parseFloat(discount) || 0
-    }
-  },
 }
