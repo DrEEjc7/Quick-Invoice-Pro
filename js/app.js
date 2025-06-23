@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 class InvoiceApp {
   constructor() {
     this.state = {}
-    this.storageKey = "invoiceData-v4"
+    this.storageKey = "invoiceData-v5"
     
     this.initialState = {
       language: "en",
@@ -240,15 +240,18 @@ class InvoiceApp {
   updatePreview() {
     const t = i18n[this.state.language] || i18n["en"]
 
-    // Update company info
+    // Update company info in header
     document.getElementById("previewCompanyName").textContent = this.state.companyName || t.companyNamePlaceholder
-    document.getElementById("previewCompanyEmail").textContent = this.state.companyEmail || ""
-    document.getElementById("previewCompanyInfo").innerHTML = (this.state.companyInfo || "").replace(/\n/g, "<br>")
+
+    // Update company info in address section  
+    document.getElementById("previewCompanyNameAddr").textContent = this.state.companyName || t.companyNamePlaceholder
+    document.getElementById("previewCompanyEmailAddr").textContent = this.state.companyEmail || ""
+    document.getElementById("previewCompanyInfoAddr").innerHTML = (this.state.companyInfo || "").replace(/\n/g, "<br>")
 
     // Update client info  
-    document.getElementById("previewClientName").textContent = this.state.clientName || t.clientNamePlaceholder
-    document.getElementById("previewClientEmail").textContent = this.state.clientEmail || ""
-    document.getElementById("previewClientInfo").innerHTML = (this.state.clientInfo || "").replace(/\n/g, "<br>")
+    document.getElementById("previewClientNameAddr").textContent = this.state.clientName || t.clientNamePlaceholder
+    document.getElementById("previewClientEmailAddr").textContent = this.state.clientEmail || ""
+    document.getElementById("previewClientInfoAddr").innerHTML = (this.state.clientInfo || "").replace(/\n/g, "<br>")
 
     // Update invoice meta
     document.getElementById("previewInvoiceNumber").textContent = `#${this.state.invoiceNumber || 'INV-001'}`
@@ -445,11 +448,11 @@ class InvoiceApp {
 
   formatCurrency(amount) {
     const currencySymbols = {
-      USD: '$', EUR: '€', GBP: '£', CAD: 'C$', 
+      USD: ', EUR: '€', GBP: '£', CAD: 'C, 
       JPY: '¥', CNY: '¥', INR: '₹'
     }
     
-    const symbol = currencySymbols[this.state.currency] || '$'
+    const symbol = currencySymbols[this.state.currency] || '
     const value = Number(amount).toFixed(2)
     return `${symbol}${value}`
   }
@@ -499,8 +502,8 @@ class InvoiceApp {
     const { jsPDF } = window.jspdf
     const doc = new jsPDF()
     
-    // Use Inter font for better Unicode support
-    doc.setFont("helvetica")
+    // Register Inter font for better Unicode support
+    registerInterFont(doc)
     
     const t = i18n[this.state.language] || i18n["en"]
     const pageWidth = doc.internal.pageSize.getWidth()
@@ -513,17 +516,17 @@ class InvoiceApp {
         const imgType = this.state.companyLogo.split(';')[0].split('/')[1].toUpperCase()
         doc.addImage(this.state.companyLogo, imgType, 15, 15, 30, 15)
         doc.setFontSize(18)
-        doc.setFont(undefined, "bold")
+        doc.setFont("Inter", "bold")
         doc.text(this.state.companyName || "", 50, 25)
       } catch (e) {
         console.error("Error adding logo:", e)
         doc.setFontSize(20)
-        doc.setFont(undefined, "bold")
+        doc.setFont("Inter", "bold")
         doc.text(this.state.companyName || "", 20, 25)
       }
     } else {
       doc.setFontSize(20)
-      doc.setFont(undefined, "bold")
+      doc.setFont("Inter", "bold")
       doc.text(this.state.companyName || "", 20, 25)
     }
 
@@ -532,14 +535,14 @@ class InvoiceApp {
     const statusText = (t[statusKey] || this.state.invoiceStatus).toUpperCase()
     
     doc.setFontSize(10)
-    doc.setFont(undefined, "bold")
+    doc.setFont("Inter", "bold")
     doc.text(statusText, pageWidth - 20, 15, { align: "right" })
 
     doc.setFontSize(22)
     doc.text((t.pdfInvoice || "INVOICE").toUpperCase(), pageWidth - 20, 25, { align: "right" })
     
     doc.setFontSize(10)
-    doc.setFont(undefined, "normal")
+    doc.setFont("Inter", "normal")
     doc.text(`#${this.state.invoiceNumber || 'INV-001'}`, pageWidth - 20, 32, { align: "right" })
 
     doc.line(15, 45, pageWidth - 15, 45)
@@ -547,14 +550,14 @@ class InvoiceApp {
     // Billing information and dates
     const yPos = 55
     doc.setFontSize(10)
-    doc.setFont(undefined, "bold")
+    doc.setFont("Inter", "bold")
     doc.setTextColor(100)
     doc.text((t.pdfBillTo || "BILL TO").toUpperCase(), 20, yPos)
     doc.text((t.pdfDateIssued || "DATE ISSUED").toUpperCase(), pageWidth / 2, yPos)
     doc.text((t.pdfDueDate || "DUE DATE").toUpperCase(), pageWidth / 1.5, yPos)
 
     doc.setTextColor(0)
-    doc.setFont(undefined, "normal")
+    doc.setFont("Inter", "normal")
 
     // Client information
     let clientY = yPos + 7
@@ -597,10 +600,14 @@ class InvoiceApp {
       theme: "striped",
       headStyles: { 
         fillColor: [22, 34, 57],
-        fontStyle: "bold"
+        fontStyle: "bold",
+        font: "Inter"
+      },
+      bodyStyles: {
+        font: "Inter"
       },
       styles: {
-        font: "helvetica",
+        font: "Inter",
         fontSize: 9
       }
     })
@@ -611,7 +618,7 @@ class InvoiceApp {
     const addTotalRow = (label, value, isBold = false) => {
       finalY += isBold ? 8 : 6
       doc.setFontSize(isBold ? 12 : 10)
-      doc.setFont(undefined, isBold ? "bold" : "normal")
+      doc.setFont("Inter", isBold ? "bold" : "normal")
       doc.text(label, pageWidth - 80, finalY, { align: "right" })
       doc.text(value, pageWidth - 20, finalY, { align: "right" })
     }
@@ -649,10 +656,10 @@ class InvoiceApp {
 
     // Notes
     if (this.state.notes && this.state.notes.trim()) {
-      doc.setFont(undefined, "bold")
+      doc.setFont("Inter", "bold")
       doc.setFontSize(10)
       doc.text(t.pdfNotes || "Notes", 20, footerY)
-      doc.setFont(undefined, "normal")
+      doc.setFont("Inter", "normal")
       
       const noteLines = doc.splitTextToSize(this.state.notes, pageWidth / 2 - 30)
       doc.text(noteLines, 20, footerY + 5)
@@ -663,7 +670,7 @@ class InvoiceApp {
     if (this.state.signatureImage) {
       try {
         const imgType = this.state.signatureImage.split(';')[0].split('/')[1].toUpperCase()
-        doc.setFont(undefined, "bold")
+        doc.setFont("Inter", "bold")
         doc.text(t.pdfSignature || "Signature", pageWidth / 2, footerY)
         doc.addImage(this.state.signatureImage, imgType, pageWidth / 2, footerY + 5, 50, 20)
         doc.line(pageWidth / 2, footerY + 27, pageWidth / 2 + 60, footerY + 27)
