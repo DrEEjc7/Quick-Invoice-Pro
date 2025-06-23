@@ -43,12 +43,16 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="clientName" class="form-label" data-i18n-key="companyName">Company Name</label>
+                            <label for="clientName" class="form-label" data-i18n-key="clientName">Client Name</label>
                             <input type="text" class="form-input" id="clientName" data-i18n-placeholder="clientNamePlaceholder">
                         </div>
                         <div class="form-group">
-                            <label for="clientAddress" class="form-label" data-i18n-key="address">Address</label>
-                            <textarea class="form-input form-textarea" id="clientAddress" data-i18n-placeholder="addressPlaceholder"></textarea>
+                            <label for="clientEmail" class="form-label" data-i18n-key="email">Email</label>
+                            <input type="email" class="form-input" id="clientEmail" data-i18n-placeholder="emailPlaceholder">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientInfo" class="form-label" data-i18n-key="companyInfo">Company Information</label>
+                            <textarea class="form-input form-textarea" id="clientInfo" data-i18n-placeholder="companyInfoPlaceholder"></textarea>
                         </div>
                     </div>
                 </section>
@@ -60,18 +64,34 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="companyName" class="form-label" data-i18n-key="companyName">Company Name</label>
-                            <input type="text" class="form-input" id="companyName" data-i18n-placeholder="yourCompanyNamePlaceholder">
+                            <input type="text" class="form-input" id="companyName" data-i18n-placeholder="companyNamePlaceholder">
                         </div>
                         <div class="form-group">
-                            <label for="companyAddress" class="form-label" data-i18n-key="address">Address</label>
-                            <textarea class="form-input form-textarea" id="companyAddress" data-i18n-placeholder="yourAddressPlaceholder"></textarea>
+                            <label for="companyEmail" class="form-label" data-i18n-key="email">Email</label>
+                            <input type="email" class="form-input" id="companyEmail" data-i18n-placeholder="emailPlaceholder">
+                        </div>
+                        <div class="form-group">
+                            <label for="companyInfo" class="form-label" data-i18n-key="companyInfo">Company Information</label>
+                            <textarea class="form-input form-textarea" id="companyInfo" data-i18n-placeholder="companyInfoPlaceholder"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="logoUpload" class="form-label" data-i18n-key="logo">Logo</label>
-                            <div class="image-upload-wrapper">
-                                <img src="" alt="Logo Preview" id="logoPreview" class="image-preview">
+                            <div class="image-upload-container" id="logoUploadContainer">
+                                <div class="image-preview-wrapper">
+                                    <img src="/placeholder.svg" alt="Logo Preview" id="logoPreview" class="image-preview">
+                                </div>
+                                <div class="image-upload-content">
+                                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <div class="upload-text" data-i18n-key="uploadLogo">Upload Logo</div>
+                                    <div class="upload-subtext" data-i18n-key="uploadLogoSubtext">PNG, JPG up to 2MB</div>
+                                </div>
                                 <input type="file" id="logoUpload" class="image-upload-input" accept="image/png, image/jpeg">
-                                <button type="button" id="removeLogoBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                                <div class="image-actions">
+                                    <button type="button" id="changeLogoBtn" class="btn-change-image" data-i18n-key="change">Change</button>
+                                    <button type="button" id="removeLogoBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -83,6 +103,15 @@
                         <div class="form-group">
                             <label for="invoiceNumber" class="form-label" data-i18n-key="invoiceNumber">Invoice Number</label>
                             <input type="text" class="form-input" id="invoiceNumber" placeholder="INV-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceStatus" class="form-label" data-i18n-key="status">Status</label>
+                            <select class="form-input form-select" id="invoiceStatus">
+                                <option value="draft" data-i18n-key="statusDraft">Draft</option>
+                                <option value="pending" data-i18n-key="statusPending">Pending</option>
+                                <option value="paid" data-i18n-key="statusPaid">Paid</option>
+                                <option value="void" data-i18n-key="statusVoid">Void</option>
+                            </select>
                         </div>
                          <div class="form-group">
                             <label for="currency" class="form-label" data-i18n-key="currency">Currency</label>
@@ -139,10 +168,22 @@
                     </div>
                     <div class="form-group">
                         <label for="signatureUpload" class="form-label" data-i18n-key="signature">Signature</label>
-                        <div class="image-upload-wrapper">
-                             <img src="" alt="Signature Preview" id="signaturePreview" class="image-preview signature-preview">
-                             <input type="file" id="signatureUpload" class="image-upload-input" accept="image/png, image/jpeg">
-                             <button type="button" id="removeSignatureBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                        <div class="image-upload-container" id="signatureUploadContainer">
+                            <div class="image-preview-wrapper">
+                                <img src="/placeholder.svg" alt="Signature Preview" id="signaturePreview" class="image-preview signature-preview">
+                            </div>
+                            <div class="image-upload-content">
+                                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                </svg>
+                                <div class="upload-text" data-i18n-key="uploadSignature">Upload Signature</div>
+                                <div class="upload-subtext" data-i18n-key="uploadSignatureSubtext">PNG, JPG up to 2MB</div>
+                            </div>
+                            <input type="file" id="signatureUpload" class="image-upload-input" accept="image/png, image/jpeg">
+                            <div class="image-actions">
+                                <button type="button" id="changeSignatureBtn" class="btn-change-image" data-i18n-key="change">Change</button>
+                                <button type="button" id="removeSignatureBtn" class="btn-remove-image" data-i18n-key="remove">Remove</button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -162,12 +203,15 @@
                     <div class="invoice-header">
                         <div class="invoice-brand">
                             <div class="invoice-logo" id="previewLogoContainer">
-                                <img src="" alt="Company Logo" id="previewLogo" style="display: none;">
+                                <img src="/placeholder.svg" alt="Company Logo" id="previewLogo" style="display: none;">
                                 <div class="invoice-logo-text" id="previewLogoText">QIP</div>
                             </div>
                             <div class="invoice-company-name" id="previewCompanyName">Your Company</div>
                         </div>
                         <div class="invoice-meta">
+                            <div class="invoice-status">
+                                <span class="status-badge" id="previewStatus"></span>
+                            </div>
                             <div class="invoice-number" id="previewInvoiceNumber"></div>
                             <div class="invoice-dates">
                                 <div id="previewInvoiceDate"></div>
@@ -179,11 +223,19 @@
                     <div class="invoice-body">
                         <div class="invoice-section from-section">
                             <h3 data-i18n-key="from">From</h3>
-                            <div class="address-info" id="previewCompanyAddress"></div>
+                            <div class="address-info" id="previewCompanyAddress">
+                                <div class="name" id="previewCompanyName"></div>
+                                <div id="previewCompanyEmail"></div>
+                                <div id="previewCompanyInfo"></div>
+                            </div>
                         </div>
                         <div class="invoice-section to-section">
                             <h3 data-i18n-key="to">To</h3>
-                            <div class="address-info" id="previewClientAddress"></div>
+                            <div class="address-info" id="previewClientAddress">
+                                <div class="name" id="previewClientName"></div>
+                                <div id="previewClientEmail"></div>
+                                <div id="previewClientInfo"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -213,7 +265,7 @@
                         <div id="signatureSection" style="display:none;">
                             <h4 data-i18n-key="signature">Signature</h4>
                             <div class="signature-image-container">
-                                <img src="" alt="Signature" id="previewSignature">
+                                <img src="/placeholder.svg" alt="Signature" id="previewSignature">
                             </div>
                         </div>
                     </div>
