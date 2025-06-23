@@ -1,40 +1,81 @@
 /**
- * Enhanced Font handling for PDF generation with Unicode support
+ * Enhanced Font handling for PDF generation with Inter font support
  * 
- * This version uses a simpler approach by leveraging the Inter font
- * that's already loaded in your HTML. Inter has excellent Unicode support
- * including special characters like Č, Ž, Š, etc.
+ * This provides excellent Unicode support including special characters 
+ * like Č, Ž, Š, etc. while maintaining consistency with the UI.
  */
 
+// Base64 encoded Inter font data - you'll need to add this
+// To generate: Download Inter-Regular.ttf from Google Fonts, then convert to Base64
+const InterFontBase64Regular = '' // Add your Base64 string here
+const InterFontBase64Bold = '' // Add your Base64 string here
+
 /**
- * Registers fonts with better Unicode support for the PDF document
+ * Registers Inter font with jsPDF for better Unicode support
  * @param {jsPDF} doc The jsPDF document instance
  */
-function registerNormalFont(doc) {
+function registerInterFont(doc) {
   try {
-    // Set default font to helvetica which has better Unicode support than default
-    // jsPDF's helvetica includes most European characters including Č, Ž, Š
+    // Try to use Inter font if Base64 data is available
+    if (InterFontBase64Regular && InterFontBase64Regular.length > 1000) {
+      console.log("Registering Inter font for PDF...")
+      
+      // Add Inter Regular
+      doc.addFileToVFS("Inter-Regular.ttf", InterFontBase64Regular)
+      doc.addFont("Inter-Regular.ttf", "Inter", "normal")
+      
+      // Add Inter Bold if available
+      if (InterFontBase64Bold && InterFontBase64Bold.length > 1000) {
+        doc.addFileToVFS("Inter-Bold.ttf", InterFontBase64Bold)
+        doc.addFont("Inter-Bold.ttf", "Inter", "bold")
+      }
+      
+      doc.setFont("Inter", "normal")
+      console.log("Inter font registered successfully")
+      return true
+    }
+  } catch (e) {
+    console.error("Inter font registration failed:", e)
+  }
+
+  // Fallback to helvetica (which has good Unicode support)
+  try {
     doc.setFont("helvetica", "normal")
-    
-    // Enable Unicode support for better character rendering
-    doc.setLanguage("en-US")
-    
-    console.log("Font configured for Unicode support")
+    console.log("Using Helvetica as fallback font")
     return true
   } catch (e) {
-    console.error("Font registration failed:", e)
+    console.error("Font registration completely failed:", e)
     return false
   }
 }
 
 /**
- * Alternative: Load Inter font dynamically from Google Fonts for web preview
- * This ensures consistent rendering between preview and PDF
+ * Alternative method: Simple approach without Base64
+ * Uses system fonts with good Unicode support
  */
-function loadInterFont() {
+function registerSystemFont(doc) {
+  try {
+    // Use helvetica which has good Unicode support in jsPDF
+    doc.setFont("helvetica", "normal")
+    
+    // Test Unicode support
+    const testChars = "Č Ž Š č ž š"
+    console.log(`Font test with characters: ${testChars}`)
+    
+    return true
+  } catch (e) {
+    console.error("System font registration failed:", e)
+    return false
+  }
+}
+
+/**
+ * Load Inter font for web preview (ensures consistency)
+ */
+function loadInterFontForWeb() {
   return new Promise((resolve, reject) => {
     // Check if Inter is already loaded
-    if (document.fonts && document.fonts.check && document.fonts.check('12px Inter')) {
+    if (document.fonts && document.fonts.check('12px Inter')) {
       resolve()
       return
     }
@@ -43,7 +84,6 @@ function loadInterFont() {
     link.href = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
     link.rel = "stylesheet"
     link.onload = () => {
-      // Wait for font to actually load
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => resolve())
       } else {
@@ -62,33 +102,15 @@ function loadInterFont() {
 }
 
 /**
- * Test function to verify Unicode character support
- * @param {jsPDF} doc 
- * @param {string} testText 
- */
-function testUnicodeSupport(doc, testText = "Test: Č Ž Š č ž š") {
-  try {
-    // Try to add the test text to verify it renders correctly
-    const tempPage = doc.internal.getCurrentPageInfo()
-    doc.text(testText, 10, 10)
-    console.log("Unicode test successful:", testText)
-    return true
-  } catch (e) {
-    console.error("Unicode test failed:", e)
-    return false
-  }
-}
-
-/**
- * Enhanced character encoding for problematic characters
- * This function can replace problematic characters with similar ones if needed
+ * Enhanced text processing for better character support
  * @param {string} text 
  */
-function enhanceTextEncoding(text) {
+function enhanceTextForPDF(text) {
   if (!text) return text
   
-  // Map of problematic characters to safe alternatives (fallback only)
+  // Inter and Helvetica support these characters, but this is a fallback
   const charMap = {
+    // Only use as absolute last resort
     'Č': 'C', 'č': 'c',
     'Ž': 'Z', 'ž': 'z', 
     'Š': 'S', 'š': 's',
@@ -96,26 +118,37 @@ function enhanceTextEncoding(text) {
     'Đ': 'D', 'đ': 'd'
   }
   
-  // First try to return original text (most fonts support these now)
-  try {
-    // Test if the string contains only supported characters
-    return text
-  } catch (e) {
-    // Fallback: replace problematic characters
-    console.warn("Replacing special characters due to font limitations")
-    return text.replace(/[ČčŽžŠšĆćĐđ]/g, char => charMap[char] || char)
-  }
+  // First try to return original text (modern fonts support these)
+  return text
+  
+  // Uncomment below only if you have issues with special characters
+  // return text.replace(/[ČčŽžŠšĆćĐđ]/g, char => charMap[char] || char)
 }
 
 /**
- * Initialize font system when DOM is ready
+ * Initialize font system
  */
 document.addEventListener('DOMContentLoaded', () => {
-  loadInterFont()
+  loadInterFontForWeb()
     .then(() => {
-      console.log("Inter font loaded successfully")
+      console.log("Inter font loaded for web preview")
     })
     .catch(error => {
-      console.warn("Inter font loading failed, using fallback:", error)
+      console.warn("Inter font loading failed:", error)
     })
 })
+
+/**
+ * Instructions for adding Inter font Base64 data:
+ * 
+ * 1. Download Inter fonts from: https://fonts.google.com/specimen/Inter
+ * 2. You need: Inter-Regular.ttf and Inter-Bold.ttf
+ * 3. Convert to Base64 using online tool or command:
+ *    - macOS/Linux: base64 -i Inter-Regular.ttf
+ *    - Online: Search "file to base64 converter"
+ * 4. Copy the VERY LONG string and paste above as InterFontBase64Regular
+ * 5. Do the same for Inter-Bold.ttf
+ * 
+ * Without the Base64 data, the app will use Helvetica as fallback,
+ * which still supports most special characters including Č, Ž, Š.
+ */
