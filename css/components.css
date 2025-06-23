@@ -627,6 +627,46 @@
   text-decoration: underline;
 }
 
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-draft {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fbbf24;
+}
+
+.status-void {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #f87171;
+}
+
+.status-paid {
+  background-color: #d1fae5;
+  color: #059669;
+  border: 1px solid #34d399;
+}
+
+.invoice-status {
+  margin-bottom: 8px;
+  text-align: right;
+}
+
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
   .preview-content {
@@ -668,44 +708,4 @@
   .items-header-label {
     font-size: 10px;
   }
-}
-
-/* Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.status-draft {
-  background-color: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-}
-
-.status-pending {
-  background-color: #fef3c7;
-  color: #d97706;
-  border: 1px solid #fbbf24;
-}
-
-.status-void {
-  background-color: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #f87171;
-}
-
-.status-paid {
-  background-color: #d1fae5;
-  color: #059669;
-  border: 1px solid #34d399;
-}
-
-.invoice-status {
-  margin-bottom: 8px;
-  text-align: right;
 }
