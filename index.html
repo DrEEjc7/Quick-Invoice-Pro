@@ -5,19 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="title">Quick Invoice Pro</title>
 
+    <!-- External Libraries: jsPDF for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
 
     <div class="app-container">
+        <!-- ===== HEADER ===== -->
         <header class="header-bar">
             <div class="header-left">
                 <div class="logo-section">
@@ -35,6 +39,7 @@
             </div>
         </header>
 
+        <!-- ===== SIDEBAR (FORM) ===== -->
         <aside class="sidebar">
             <div class="sidebar-content">
                 <section class="form-section">
@@ -197,6 +202,7 @@
             </div>
         </aside>
 
+        <!-- ===== PREVIEW PANEL ===== -->
         <main class="preview-panel">
             <div class="preview-content">
                 <div class="invoice-preview" id="invoicePreview">
@@ -246,15 +252,15 @@
 
                     <div class="invoice-totals">
                         <div class="totals-section">
-                            <div class="total-row"><span class="total-label" data-i18n-key="subtotal"></span><span class="total-amount" id="subtotalAmount"></span></div>
-                            <div class="total-row" id="discountRow" style="display: none;"><span class="total-label" data-i18n-key="discount"></span><span class="total-amount" id="discountAmount"></span></div>
-                            <div class="total-row" id="taxRow" style="display: none;"><span class="total-label" data-i18n-key="tax"></span><span class="total-amount" id="taxAmount"></span></div>
-                            <div class="total-row grand-total"><span class="total-label" data-i18n-key="total"></span><span class="total-amount" id="totalAmount"></span></div>
+                            <div class="total-row"><span class="total-label" data-i18n-key="subtotal">Subtotal</span><span class="total-amount" id="subtotalAmount"></span></div>
+                            <div class="total-row" id="discountRow" style="display: none;"><span class="total-label" data-i18n-key="discount">Discount</span><span class="total-amount" id="discountAmount"></span></div>
+                            <div class="total-row" id="taxRow" style="display: none;"><span class="total-label" data-i18n-key="tax">Tax</span><span class="total-amount" id="taxAmount"></span></div>
+                            <div class="total-row grand-total"><span class="total-label" data-i18n-key="total">Total</span><span class="total-amount" id="totalAmount"></span></div>
                         </div>
                     </div>
                     
                     <div class="payment-link-wrapper" id="previewPaymentLinkWrapper" style="display: none;">
-                        <a href="#" target="_blank" class="payment-link-btn" id="previewPaymentLink" data-i18n-key="payNow"></a>
+                        <a href="#" target="_blank" class="payment-link-btn" id="previewPaymentLink" data-i18n-key="payNow">Pay Now</a>
                     </div>
 
                     <div class="invoice-footer">
@@ -274,10 +280,12 @@
         </main>
     </div>
     
+    <!-- ===== FOOTER ===== -->
     <footer class="app-footer">
         Copyright © <span id="currentYear">2025</span> • Designed with ❤️ by <a href="https://dee7studio.com" target="_blank">Dee7 Studio</a>
     </footer>
 
+    <!-- ===== SCRIPTS ===== -->
     <script src="js/font.js" defer></script>
     <script src="js/translations.js" defer></script>
     <script src="js/app.js" defer></script>
